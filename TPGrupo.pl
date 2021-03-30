@@ -32,16 +32,35 @@
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Base de conhecimento (com exemplos arbitrários)
 
-utente(1,211111111,ana,(1,1,2000),'ana@gmail.com','Braga','Médica',[],1).
-utente(2, 221111111, maria,(5,11,2001), 'maria@gmail.com', 'Viana do Castelo', 'Professora', [asma], 1).
+utente(1,211111111,'Ana Murciellago',(1,1,2000),'ana@gmail.com','Braga','Médica',[],1).
+utente(2, 221111111,'Maria do Olival',(5,11,2001), 'maria@gmail.com', 'Viana do Castelo', 'Professora', [asma], 1).
+utente(3,01234567890,'igor marcos',(20,8,1989),'marcos.mendes@gmail.com',252252252,'R. Amaral 8499-852 São Mamede de Infesta','Agricultor', [hiv,hepatite], 3).
+utente(4,11111111111,'rebeca tavares marques',(10,8,2009),'maia.lara@gmail.com', 930643063, 'Avenida St. Valentim Fonseca, nº 3, 94º Dir. 9794-701 Quarteira', 'Estudante', [tuberculose] , 2).
+utente(5,09876543210,'Yasmin Sara Leite de Borges',(19,4,1989),'dinis91@pereira.info',236082002, 'Avenida Leonardo Rodrigues, nº 2 3819-133 Aveiro','CEO Empresa de Marketing', [brucellosis,'gripe canina'],4).
 
 centro_saude(1,'USFVida+','Vila Verde',253123456,'usfvida+@gmail.com').
+centro_saude(2,'UCSP Quarteira','Quarteira',244322111,'ucspquart@info.gmailcom').
+centro_saude(3,'USF infesta','São Mamede Infesta', 254254252,'centrosaude@gmail.com').
+centro_saude(4,'USF MOLICEIRO', 'Aveiro', 2512522523, 'aveirocsaude@gmail.com').
 
-staff(1,1,marria,'maria@gmail.com').
+staff(1,1,'Marria Silva','maria@gmail.com').
+staff(2,1,'Joana Guerra','joana@gmail.com').
+staff(3,1,'Miguel Santos', 'santosmiguel@gmail.com').
+staff(4,2,'Mario Sergio', 'sergiomario@gmail.com').
+staff(5,2,'Ricardo Salgado','salgadoricardo@bancoes.com').
+staff(6,3,'Joana Vasconcelos', 'arte@gmail.com').
+staff(7,4,'Pedro Granger', 'apresentador@rtp.pt').
 
 vacinacao_covid(1,1,(1,1,2021),'Pfizer',1).
-vacinacao_covid(1,1,(1,1,2021),'Pfizer',2).
+vacinacao_covid(2,1,(1,1,2021),'Pfizer',2).
 vacinacao_covid(1,2,(1,1,2021),'Pfizer',1).
+vacinacao_covid(6,3,(10,3,2021),'AstraZeneca',1).
+vacinacao_covid(4,4,(11,3,2021),'Pfizer',1).
+vacinacao_covid(5,4,(26,3,2021),'Pfizer',2).
+vacinacao_covid(6,3,(10,6,2021),'AstraZeneca',2).
+vacinacao_covid(7,5,(30,3,2021), 'Vaxzevria',1).
+
+
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Identificar pessoas nao vacinadas
