@@ -90,7 +90,7 @@ faseLista(3,L,(29,4,2021)) :-
 fase(4,Id,(12,6,2021)) :- nao(fase(1,Id,_)), nao(fase(2,Id,_)), nao(fase(3,Id,_)).
 
 %Alterar para subtrair dia e mes
-idade(Id,I) :- utente(Id,_,_,(_,_,A),_,_,_,_,_,_), date(date(Y,_,_)), I is Y-A.
+idade(Id,I) :- utente(Id,_,_,(D,M,A),_,_,_,_,_,_), date(DataAtual), date_difference(DataAtual,date(A,M,D),[I|_]).
 vazia([]).
 
 
