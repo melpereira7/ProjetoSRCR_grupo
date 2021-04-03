@@ -37,12 +37,12 @@
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Base de conhecimento (com exemplos arbitrários)
 
-utente(1,211111111,'Ana Murciellago',(1,1,1930),'ana@gmail.com',911234567,'Braga','Médica',[],1).
-utente(2,221111111,'Maria do Olival',(5,11,2001), 'maria@gmail.com',936484263 ,'Viana do Castelo', 'Professora', [asma], 1).
-utente(3,01234567890,'Igor Marcos',(20,8,1989),'marcos.mendes@gmail.com',252252252,'R. Amaral 8499-852 São Mamede de Infesta','Agricultor', [hiv,hepatite], 3).
-utente(4,11111111111,'Rebeca Tavares Marques',(10,8,2009),'maia.lara@gmail.com', 930643063, 'Avenida St. Valentim Fonseca, nº 3, 94º Dir. 9794-701 Quarteira', 'Estudante', [tuberculose] , 2).
-utente(5,09876543210,'Yasmin Sara Leite de Borges',(19,4,1989),'dinis91@pereira.info',236082002, 'Avenida Leonardo Rodrigues, nº 2 3819-133 Aveiro','CEO Empresa de Marketing', [brucellosis,'gripe canina'],4).
-utente(6,66666666666,'José Aristoteles',(17,10,1987),'exprimeiro@gov.pt',090909090,'Alameda','Engenheiro',[],1).
+utente(1,211111111,'Ana Murciellago',date(1930,1,1),'ana@gmail.com',911234567,'Braga','Médica',[],1).
+utente(2,221111111,'Maria do Olival',date(2001,11,5), 'maria@gmail.com',936484263 ,'Viana do Castelo', 'Professora', [asma], 1).
+utente(3,01234567890,'Igor Marcos',date(1989,8,20),'marcos.mendes@gmail.com',252252252,'R. Amaral 8499-852 São Mamede de Infesta','Agricultor', [hiv,hepatite], 3).
+utente(4,11111111111,'Rebeca Tavares Marques',date(2009,8,10),'maia.lara@gmail.com', 930643063, 'Avenida St. Valentim Fonseca, nº 3, 94º Dir. 9794-701 Quarteira', 'Estudante', [tuberculose] , 2).
+utente(5,09876543210,'Yasmin Sara Leite de Borges',date(1989,4,19),'dinis91@pereira.info',236082002, 'Avenida Leonardo Rodrigues, nº 2 3819-133 Aveiro','CEO Empresa de Marketing', [brucellosis,'gripe canina'],4).
+utente(6,66666666666,'José Aristoteles',date(1987,10,17),'exprimeiro@gov.pt',090909090,'Alameda','Engenheiro',[],1).
 utente(ID) :- utente(ID,_,_,_,_,_,_,_,_,_).
 %yasmin n foi vacinada
 
@@ -61,36 +61,36 @@ staff(6,3,'Joana Vasconcelos', 'arte@gmail.com').
 staff(7,4,'Pedro Granger', 'apresentador@rtp.pt').
 staff(ID) :- staff(ID,_,_,_).
 
-vacinacao_covid(1,1,(1,2,2021),'Pfizer',1).
-vacinacao_covid(2,1,(5,2,2021),'Pfizer',2).
-vacinacao_covid(1,2,(1,2,2021),'Pfizer',1).
-vacinacao_covid(6,3,(10,3,2021),'AstraZeneca',1).
-vacinacao_covid(4,4,(11,3,2021),'Pfizer',1).
-vacinacao_covid(5,4,(26,3,2021),'Pfizer',2).
-vacinacao_covid(6,3,(10,6,2021),'AstraZeneca',2).
-vacinacao_covid(7,6,(5,2,2021),'AstraZeneca',2).
+vacinacao_covid(1,1,date(2021,2,1),'Pfizer',1).
+vacinacao_covid(2,1,date(2021,2,5),'Pfizer',2).
+vacinacao_covid(1,2,date(2021,2,1),'Pfizer',1).
+vacinacao_covid(6,3,date(2021,3,10),'AstraZeneca',1).
+vacinacao_covid(4,4,date(2021,3,11),'Pfizer',1).
+vacinacao_covid(5,4,date(2021,3,26),'Pfizer',2).
+vacinacao_covid(6,3,date(2021,6,10),'AstraZeneca',2).
+vacinacao_covid(7,6,date(2021,2,5),'AstraZeneca',2).
 vacinacao_covid(Idstaff,Idutente) :- vacinacao_covid(Idstaff,Idutente,_,_,_).
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Permitir a definição de fases de vacinação, definindo critérios de inclusão de utentes nas diferentes fases (e.g., doenças crónicas, idade, profissão);
 
-fase(1,Id,(1,2,2021)) :- idade(Id,I), I>80.
-faseLista(1,L,(1,2,2021)) :- solucoes(Id,(idade(Id,I),I>=80),L).
+fase(1,Id,date(2021,2,1)) :- idade(Id,I), I>80.
+faseLista(1,L,date(2021,2,1)) :- solucoes(Id,(idade(Id,I),I>=80),L).
 
-fase(2,Id,(29,3,2021)) :- utente(Id,_,_,_,_,_,_,_,DoencasCronicas,_), nao(vazia(DoencasCronicas)).
-faseLista(2,L,(29,3,2021)) :- solucoes(Id,(utente(Id,_,_,_,_,_,_,_,DoencasCronicas,_), nao(vazia(DoencasCronicas))),L).
+fase(2,Id,date(2021,3,29)) :- utente(Id,_,_,_,_,_,_,_,DoencasCronicas,_), nao(vazia(DoencasCronicas)).
+faseLista(2,L,date(2021,3,29)) :- solucoes(Id,(utente(Id,_,_,_,_,_,_,_,DoencasCronicas,_), nao(vazia(DoencasCronicas))),L).
 
-fase(3,Id,(29,4,2021)) :- 
+fase(3,Id,date(2021,4,29)) :- 
     utente(Id,_,_,_,_,_,_,Profissao,_,_),
     pertence(Profissao,['Médica','Médico','Enfermeira','Enfermeiro','Auxiliar de Saúde','Professora','Professor']).
-faseLista(3,L,(29,4,2021)) :-
+faseLista(3,L,date(2021,4,29)) :-
     solucoes(Id,(utente(Id,_,_,_,_,_,_,Profissao,_,_),
                 pertence(Profissao,['Médica','Médico','Enfermeira','Enfermeiro','Auxiliar de Saúde','Professora','Professor'])),L).
 
-fase(4,Id,(12,6,2021)) :- nao(fase(1,Id,_)), nao(fase(2,Id,_)), nao(fase(3,Id,_)).
+fase(4,Id,date(2021,6,12)) :- nao(fase(1,Id,_)), nao(fase(2,Id,_)), nao(fase(3,Id,_)).
 
 %Alterar para subtrair dia e mes
-idade(Id,I) :- utente(Id,_,_,(D,M,A),_,_,_,_,_,_), date(DataAtual), date_difference(DataAtual,date(A,M,D),[I|_]).
+idade(Id,I) :- utente(Id,_,_,Data_Nasc,_,_,_,_,_,_), date(DataAtual), date_interval(DataAtual,Data_Nasc, I years).
 vazia([]).
 
 
@@ -116,13 +116,13 @@ vacinada(Id,1) :- utente(Id), vacinacao_covid(_,Id,_,_,1).
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Identificar pessoas vacinadas indevidamente
 
-vacinada_indevidamente(Id) :- utente(Id), vacinada(Id), vacinacao_covid(_,Id,(Dv,Mv,Av),_,_), fase(_,Id,(Df,Mf,Af)),! ,date_compare(date(Af,Mf,Df),>,date(Av,Mv,Dv)).
+vacinada_indevidamente(Id) :- utente(Id), vacinada(Id), vacinacao_covid(_,Id,Data_vac,_,_), fase(_,Id,Data_fase),! ,date_compare(Data_fase,>,Data_vac).
 
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Identificar pessoas não vacinadas e que são candidatas a vacinação
 
-candidata(Id) :- utente(Id), nao(vacinada(Id)), date(DataAtual), fase(_,Id,DataFase), date_compare(DataAtual,>=,date(DataFase)).
+candidata(Id) :- utente(Id), nao(vacinada(Id)), date(DataAtual), fase(_,Id,DataFase), date_compare(DataAtual,>=,DataFase).
 candidatas(S) :- solucoes(Id,candidata(Id),S).
 
 
