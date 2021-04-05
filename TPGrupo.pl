@@ -233,7 +233,7 @@ removerVacinacao(Idstaff,Idutente,Data,Vacina,Toma) :-
                 comprimento(S,N),
                 N==1).
 
-% % Não pode haver mais que um staff com o mesmo identificador
+% Não pode haver mais que um staff com o mesmo identificador
 +staff(Idstaff,Idcentro,Nome,Email) ::
                 (solucoes(Idstaff,staff(Idstaff),S),
                  comprimento(S,N),
