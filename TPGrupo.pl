@@ -102,12 +102,12 @@ pertence(X,[Y|L]) :- X\=Y, pertence(X,L).
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Identificar pessoas nao vacinadas
 
--vacinada(Id) :- nao(vacinacao_covid(_,Id)).
+-vacinada(Id) :- utente(Id), nao(vacinacao_covid(_,Id)).
 % extra
 %-vacinada(Id) :- nao(vacinada(Id)), nao(excecao(vacinada(Id))).
 
 % Identificar pessoas nao vacinadas numa certa toma
--vacinada(Id,T) :- nao(vacinacao_covid(_,Id,_,_,T)).
+-vacinada(Id,T) :- utente(Id), nao(vacinacao_covid(_,Id,_,_,T)).
 % extra
 %-vacinada(Id,T) :- nao(vacinada(Id,T)), nao(excecao(vacinada(Id,T))).
 
