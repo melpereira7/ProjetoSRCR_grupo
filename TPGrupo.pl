@@ -28,7 +28,7 @@
 %utente: #Idutente, Nº Segurança_Social, Nome, Data_Nasc, Email, Telefone, Morada, Profissão, [Doenças_Crónicas], #CentroSaúde ↝ { 𝕍, 𝔽}
 %utente(Idutente,NISS,Nome,Data_Nasc,Email,Telefone,Morada,Profissao,[DoencasCronicas],Idcentro).
 %centro_saude: #Idcentro, Nome, Morada, Telefone, Email ↝ { 𝕍, 𝔽}
-%centro_saude(Id,Nome,Morada,Telefone,Email).
+%centro_saude(Idcentro,Nome,Morada,Telefone,Email).
 %staff: #Idstaff, #Idcentro, Nome, email ↝ { 𝕍, 𝔽 }
 %staff(Idstaff,Idcentro,Nome,Email).
 %vacinacao_covid: #staff, #utente, Data, Vacina, Toma↝ { 𝕍, 𝔽 }
@@ -107,7 +107,8 @@ pertence(X,[Y|L]) :- X\=Y, pertence(X,L).
 %-vacinada(Id) :- nao(vacinada(Id)), nao(excecao(vacinada(Id))).
 
 % Identificar pessoas nao vacinadas numa certa toma
--vacinada(Id,T) :- utente(Id), nao(vacinacao_covid(_,Id,_,_,T)).
+-vacinada(Id,1) :- utente(Id), nao(vacinacao_covid(_,Id,_,_,1)).
+-vacinada(Id,2) :- utente(Id), nao(vacinacao_covid(_,Id,_,_,2)).
 % extra
 %-vacinada(Id,T) :- nao(vacinada(Id,T)), nao(excecao(vacinada(Id,T))).
 
@@ -115,7 +116,7 @@ pertence(X,[Y|L]) :- X\=Y, pertence(X,L).
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Identificar pessoas vacinadas
 
-vacinada(Id) :- utente(Id), vacinacao_covid(_,Id,_,_,_).
+vacinada(Id) :- utente(Id), vacinacao_covid(_,Id).
 
 % Identificar pessoas vacinadas numa certa toma 
 vacinada(Id,2) :- utente(Id), vacinacao_covid(_,Id,_,_,2).
@@ -125,7 +126,7 @@ vacinada(Id,1) :- utente(Id), vacinacao_covid(_,Id,_,_,1).
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Identificar pessoas vacinadas indevidamente
 
-vacinada_indevidamente(Id) :- utente(Id), vacinada(Id), vacinacao_covid(_,Id,Data_vac,_,_), fase(_,Id,Data_fase),! ,date_compare(Data_fase,>,Data_vac).
+vacinada_indevidamente(Id) :- utente(Id), vacinada(Id), vacinacao_covid(_,Id,DataVac,_,_), fase(_,Id,DataFase), !, date_compare(DataFase,>,DataVac).
 
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
@@ -141,7 +142,12 @@ candidatas(S) :- solucoes(Id,candidata(Id),S).
 segunda_toma(Id) :- utente(Id), vacinada(Id,1), nao(vacinada(Id,2)).
 
 
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+% Desenvolver um sistema de inferência capaz de implementar os mecanismos de raciocínio inerentes a estes sistemas.
 
+si(Questao,verdadeiro) :- Questao.
+si(Questao,falso) :- -Questao.
+si(Questao,desconhecido) :- nao(Questao), nao(-Questao).
 
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
@@ -171,18 +177,18 @@ registarVacinacao(Idstaff,Idutente,Data,Vacina,Toma) :-
 %---- Remoções
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % utente
-removerUtente(Nome) :-
-    involucao(utente(_,_,Nome,_,_,_,_,_,_,_)).
+removerUtente(Idutente,NISS,Nome,Data_Nasc,Email,Telefone,Morada,Profissao,DoencasCronicas,Idcentro) :-
+    involucao(utente(Idutente,NISS,Nome,Data_Nasc,Email,Telefone,Morada,Profissao,DoencasCronicas,Idcentro)).
 
 
 % centro_saude
-removerCentro(Nome) :-
-    involucao(centro_saude(_,Nome,_,_,_)).
+removerCentro(Idcentro,Nome,Morada,Telefone,Email) :-
+    involucao(centro_saude(Idcentro,Nome,Morada,Telefone,Email)).
 
 
 % staff
-removerStaff(Nome) :-
-    involucao(staff(_,_,Nome,_)).
+removerStaff(Idstaff,Idcentro,Nome,Email) :-
+    involucao(staff(Idstaff,Idcentro,Nome,Email)).
 
 
 % vacinacao_covid
@@ -190,37 +196,46 @@ removerVacinacao(Idstaff,Idutente,Data,Vacina,Toma) :-
     involucao(vacinacao_covid(Idstaff,Idutente,Data,Vacina,Toma)).
 
 
-
-
-
-
-
-
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
-% Não pode haver mais que um utente com os mesmos dados
+% Não pode haver mais que um utente com o mesmo identificador
 +utente(Idutente,NISS,Nome,Data_Nasc,Email,Telefone,Morada,Profissao,DoencasCronicas,Idcentro) :: 
                 (solucoes(Idutente,utente(Idutente),S),
                  comprimento(S,N),
                  N==1).
 
-
+% Não pode haver um utente registado num centro de saúde que não seja conhecido pelo sistema
 +utente(_,_,_,_,_,_,_,_,_,Idcentro) :: 
                 (solucoes(Idcentro,centro_saude(Idcentro),S),
                  comprimento(S,N),
                  N>0).                 
 
+% Não pode haver uma vacinação feita por uma pessoa do staff a um utente que não sejam conhecidos pelo sistema
 +vacinacao_covid(Idstaff,Idutente,Data,Vacina,Toma) :: 
                 (solucoes((Idstaff,Idutente),(staff(Idstaff),utente(Idutente)),S),
                  comprimento(S,N),
                  N==1). 
 
+% % Não pode haver mais que um staff com o mesmo identificador
++staff(Idstaff,Idcentro,Nome,Email) ::
+                (solucoes(Idstaff,staff(Idstaff),S),
+                 comprimento(S,N),
+                 N==1).
 
-% Isto não funciona
-%-utente(Idutente,NISS,Nome,Data_Nasc,Email,Telefone,Morada,Profissao,DoencasCronicas,Idcentro) :: 
-%                (solucoes(Nome,(vacinada(Nome)),S),
-%                 comprimento(S,N),
-%                 N==1).
+% Não pode haver staff de um centro de saúde que não é conhecido pelo sistema
++staff(Idstaff,Idcentro,Nome,Email) ::
+                (solucoes(Idcentro,centro_saude(Idcentro),S),
+                comprimento(S,N),
+                N>0).
 
+% Não pode ser retirado um utente que ainda não tenha a vacinação completa
+-utente(Idutente,NISS,Nome,Data_Nasc,Email,Telefone,Morada,Profissao,DoencasCronicas,Idcentro) ::
+                (vacinacao_covid(_,Idutente,_,_,2)).
+
+% Não pode ser retirado um centro de saúde que teha utentes registados
+-centro_saude(Idcentro,Nome,Morada,Telefone,Email) ::
+                (solucoes(Idutente,(utente(Idutente,_,_,_,_,_,_,_,_,Idcentro)),S),
+                comprimento(S,N),
+                N==0).
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Extensao do predicado que permite a evolucao do conhecimento
@@ -241,15 +256,6 @@ involucao(Termo) :- solucoes(Invariante,-Termo::Invariante,Lista), remocao(Termo
 
 remocao(Termo) :- retract(Termo).
 remocao(Termo) :- assert(Termo),!,fail.
-
-
-%--------------------------------- - - - - - - - - - -  -  -  -  -   -
-% Extensao do meta-predicado demo: Questao,Resposta -> {V,F}
-%                            Resposta = { verdadeiro,falso,desconhecido }
-
-demo(Questao,verdadeiro) :- Questao.
-demo(Questao,falso) :- -Questao.
-demo(Questao,desconhecido) :- nao(Questao), nao(-Questao).
 
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
