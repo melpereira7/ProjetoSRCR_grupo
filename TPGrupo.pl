@@ -95,15 +95,21 @@ faseLista(4,L,date(2021,6,12)) :- solucoes(Id,fase(4,Id,date(2021,6,12)),L).
 
 idade(Id,I) :- utente(Id,_,_,Data_Nasc,_,_,_,_,_,_), date(DataAtual), date_interval(DataAtual,Data_Nasc, I years).
 vazia([]).
+pertence(X,[X|L]).
+pertence(X,[Y|L]) :- X\=Y, pertence(X,L).
 
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Identificar pessoas nao vacinadas
 
--vacinada(Id) :- nao(vacinada(Id)), nao(excecao(vacinada(Id))).
+-vacinada(Id) :- nao(vacinacao_covid(_,Id)).
+% extra
+%-vacinada(Id) :- nao(vacinada(Id)), nao(excecao(vacinada(Id))).
 
 % Identificar pessoas nao vacinadas numa certa toma
--vacinada(Id,T) :- nao(vacinada(Id,T)), nao(excecao(vacinada(Id,T))).
+-vacinada(Id,T) :- nao(vacinacao_covid(_,Id,_,_,T)).
+% extra
+%-vacinada(Id,T) :- nao(vacinada(Id,T)), nao(excecao(vacinada(Id,T))).
 
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
@@ -258,6 +264,3 @@ nao(Questao).
 solucoes(X,Y,Z) :- findall(X,Y,Z).
 
 comprimento(S,N) :- length(S,N).
-
-pertence(X,[X|L]).
-pertence(X,[Y|L]) :- X\=Y, pertence(X,L).
