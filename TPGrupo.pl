@@ -215,6 +215,24 @@ removerVacinacao(Idstaff,Idutente,Data,Vacina,Toma) :-
                  comprimento(S,N),
                  N==1). 
 
+% Não pode haver mais que uma vacinação com os mesmos dados
++vacinacao_covid(Idstaff,Idutente,Data,Vacina,Toma) :: 
+                (solucoes((Idstaff,Idutente),vacinacao_covid(Idstaff,Idutente,Data,Vacina,Toma),S),
+                 comprimento(S,N),
+                 N==1). 
+
+% Não pode haver mais que um utente com o mesmo identificador
++centro_saude(Idcentro,Nome,Morada,Telefone,Email) ::
+                (solucoes(Idcentro,centro_saude(Idcentro),S),
+                comprimento(S,N),
+                N==1).
+
+% Não pode haver mais que um utente com os mesmos dados
++centro_saude(Idcentro,Nome,Morada,Telefone,Email) ::
+                (solucoes(Idcentro,centro_saude(Idcentro,Nome,Morada,Telefone,Email),S),
+                comprimento(S,N),
+                N==1).
+
 % % Não pode haver mais que um staff com o mesmo identificador
 +staff(Idstaff,Idcentro,Nome,Email) ::
                 (solucoes(Idstaff,staff(Idstaff),S),
