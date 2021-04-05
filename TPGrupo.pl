@@ -249,7 +249,7 @@ removerVacinacao(Idstaff,Idutente,Data,Vacina,Toma) :-
 -utente(Idutente,NISS,Nome,Data_Nasc,Email,Telefone,Morada,Profissao,DoencasCronicas,Idcentro) ::
                 (vacinacao_covid(_,Idutente,_,_,2)).
 
-% Não pode ser retirado um centro de saúde que teha utentes registados
+% Não pode ser retirado um centro de saúde que tenha utentes registados
 -centro_saude(Idcentro,Nome,Morada,Telefone,Email) ::
                 (solucoes(Idutente,(utente(Idutente,_,_,_,_,_,_,_,_,Idcentro)),S),
                 comprimento(S,N),
