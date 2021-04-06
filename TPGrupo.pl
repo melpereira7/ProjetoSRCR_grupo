@@ -11,6 +11,8 @@
 
 :- use_module(library(date_time)).
 
+%para dar up do menu
+:- consult(menu).
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Definicoes iniciais
 
