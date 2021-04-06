@@ -1,3 +1,10 @@
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+% Declaracoes iniciais
+
+:- style_check(-singleton).
+:- style_check(-discontiguous).
+:- set_prolog_flag(w:unknown,fail).
+
 % ------------------------------ Menu ------------------------------------------
 
 menu:- write('\n'),

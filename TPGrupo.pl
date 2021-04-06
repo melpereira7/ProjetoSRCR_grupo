@@ -179,17 +179,20 @@ registarVacinacao(Idstaff,Idutente,Data,Vacina,Toma) :-
 %---- Remoções
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % utente
-removerUtente(Idutente,NISS,Nome,Data_Nasc,Email,Telefone,Morada,Profissao,DoencasCronicas,Idcentro) :-
+removerUtente(Idutente) :-
+    utente(Idutente,NISS,Nome,Data_Nasc,Email,Telefone,Morada,Profissao,DoencasCronicas,Idcentro),
     involucao(utente(Idutente,NISS,Nome,Data_Nasc,Email,Telefone,Morada,Profissao,DoencasCronicas,Idcentro)).
 
 
 % centro_saude
-removerCentro(Idcentro,Nome,Morada,Telefone,Email) :-
+removerCentro(Idcentro) :-
+    centro_saude(Idcentro,Nome,Morada,Telefone,Email),
     involucao(centro_saude(Idcentro,Nome,Morada,Telefone,Email)).
 
 
 % staff
-removerStaff(Idstaff,Idcentro,Nome,Email) :-
+removerStaff(Idstaff) :-
+    staff(Idstaff,Idcentro,Nome,Email),
     involucao(staff(Idstaff,Idcentro,Nome,Email)).
 
 
