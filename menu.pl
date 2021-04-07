@@ -23,9 +23,11 @@ menu:- write('\n'),
        write('8.Apagar Centro de Saúde \n'),
        write('9.Apagar Elemento do Staff \n'),
        write('10.Apagar Vacinação \n'),
+       write('11.Apagar Medico \n'),
+       write('12.Apagar Consulta\n'),
        write('\n'),
        write('-----------Extras-----------\n'),
-       write('11.Custo total consultas por utente\n'),
+       write('13.Custo total consultas por utente\n'), %nao esta implementado, ainda
        write('0.Sair \n'),
        read(Option),
        executar(Option).
@@ -41,7 +43,7 @@ executar(Option):-Option =:=1,addUtente,menu;
                   Option =:=9,deleteStaff,menu;
                   Option =:=10,deleteVacinacao,menu;
                   Option =:=11,deleteMedico,menu;
-                  Option =:=10,deleteConsulta,menu;
+                  Option =:=12,deleteConsulta,menu;
                   Option =:=0,true,write('Goodbye.').
 
 /*-------------------------------- INSERÇÕES -------------------------------- */
