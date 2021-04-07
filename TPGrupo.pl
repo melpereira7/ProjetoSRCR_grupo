@@ -18,37 +18,36 @@
 % Definicoes iniciais
 
 :- op(900,xfy,'::').
-:- dynamic utente/10.
+:- dynamic utente/11.
 :- dynamic centro_saude/5.
 :- dynamic staff/4.
 :- dynamic vacinacao_covid/5.
-
-:- dynamic vacinada/3.
-:- dynamic segunda_toma/3.
+:- dynamic medico_familia/4.
+:- dynamic consulta/7.
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 
-%utente: #Idutente, Nº Segurança_Social, Nome, Data_Nasc, Email, Telefone, Morada, Profissão, [Doenças_Crónicas], #CentroSaúde ↝ { 𝕍, 𝔽}
-%utente(Idutente,NISS,Nome,Data_Nasc,Email,Telefone,Morada,Profissao,[DoencasCronicas],Idcentro).
-%centro_saude: #Idcentro, Nome, Morada, Telefone, Email ↝ { 𝕍, 𝔽}
+%utente: #Utente, Nº Segurança_Social, Nome, Data_Nasc, Email, Telefone, Morada, Profissão, [Doenças_Crónicas], #CentroSaúde, #MédicoDeFamília ↝ { 𝕍, 𝔽}
+%utente(Idutente,NISS,Nome,Data_Nasc,Email,Telefone,Morada,Profissao,[DoencasCronicas],Idcentro,Idmedico).
+%centro_saude: #Centro, Nome, Morada, Telefone, Email ↝ { 𝕍, 𝔽}
 %centro_saude(Idcentro,Nome,Morada,Telefone,Email).
-%staff: #Idstaff, #Idcentro, Nome, email ↝ { 𝕍, 𝔽 }
+%staff: #Staff, #Centro, Nome, email ↝ { 𝕍, 𝔽 }
 %staff(Idstaff,Idcentro,Nome,Email).
-%vacinacao_covid: #staff, #utente, Data, Vacina, Toma↝ { 𝕍, 𝔽 }
+%vacinacao_covid: #Staff, #Utente, Data, Vacina, Toma↝ { 𝕍, 𝔽 }
 %vacinacao_covid(Idstaff,Idutente,Data,Vacina,Toma).
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Base de conhecimento (com exemplos arbitrários)
 
-utente(1,21111111112,'Ana Murciellago',date(1930,1,1),'ana@gmail.com',911234567,'Braga','Médica',[],1).
-utente(2,22111111112,'Maria do Olival',date(2001,11,5), 'maria@gmail.com',936484263 ,'Viana do Castelo', 'Professora', ['asma'], 1).
-utente(3,01234567890,'Igor Marcos',date(1989,8,20),'marcos.mendes@gmail.com',252252252,'R. Amaral 8499-852 São Mamede de Infesta','Agricultor', ['hiv','hepatite'], 3).
-utente(4,11111111111,'Rebeca Tavares Marques',date(2009,8,10),'maia.lara@gmail.com', 930643063, 'Avenida St. Valentim Fonseca, nº 3, 94º Dir. 9794-701 Quarteira', 'Estudante', ['tuberculose'] , 2).
-utente(5,09876543210,'Yasmin Sara Leite de Borges',date(1989,4,19),'dinis91@pereira.info',236082002, 'Avenida Leonardo Rodrigues, nº 2 3819-133 Aveiro','CEO Empresa de Marketing', ['brucellosis','gripe canina'],4).
-utente(6,66666666666,'José Aristoteles',date(1967,1,29),'exprimeiro@gov.pt',090909090,'Alameda','Engenheiro',[],9).
-utente(7,12345652858,'Custódio Borges',date(1987,4,15),'custodio@sapo.pt',251252254,'Rua Esteves Vasto 23 Santo Tirso','Calceiteiro',['Hipertensão','Colesterol'],7).
-utente(8,15615956260,'Francisco Carriço',date(1977,4,17),'carriçochico@yahoo.com',255256258,'Rua Professor Batata Aracena','Advogado',['Diabetes', 'Artrite'],8).
-utente(9,30861910266,'Jacinta Barboza',date(1982,2,13),'jacibar@gmail.com',256257269,'Rua do Rei de Fafe, Fafe','Empresário',['Alzheimer', 'Doença crónica dos rins'],10).
+utente(1,21111111112,'Ana Murciellago',date(1930,1,1),'ana@gmail.com',911234567,'Braga','Médica',[],1,1).
+utente(2,22111111112,'Maria do Olival',date(2001,11,5), 'maria@gmail.com',936484263 ,'Viana do Castelo', 'Professora', ['asma'],1,1).
+utente(3,01234567890,'Igor Marcos',date(1989,8,20),'marcos.mendes@gmail.com',252252252,'R. Amaral 8499-852 São Mamede de Infesta','Agricultor',['hiv','hepatite'],3,2).
+utente(4,11111111111,'Rebeca Tavares Marques',date(2009,8,10),'maia.lara@gmail.com',930643063,'Avenida St. Valentim Fonseca, nº 3, 94º Dir. 9794-701 Quarteira','Estudante',['tuberculose'],2,3).
+utente(5,09876543210,'Yasmin Sara Leite de Borges',date(1989,4,19),'dinis91@pereira.info',236082002,'Avenida Leonardo Rodrigues, nº 2 3819-133 Aveiro','CEO Empresa de Marketing',['brucellosis','gripe canina'],4,4).
+utente(6,66666666666,'José Aristoteles',date(1967,1,29),'exprimeiro@gov.pt',090909090,'Alameda','Engenheiro',[],9,9).
+utente(7,12345652858,'Custódio Borges',date(1987,4,15),'custodio@sapo.pt',251252254,'Rua Esteves Vasto 23 Santo Tirso','Calceiteiro',['Hipertensão','Colesterol'],7,7).
+utente(8,15615956260,'Francisco Carriço',date(1977,4,17),'carriçochico@yahoo.com',255256258,'Rua Professor Batata Aracena','Advogado',['Diabetes','Artrite'],8,8).
+utente(9,30861910266,'Jacinta Barboza',date(1982,2,13),'jacibar@gmail.com',256257269,'Rua do Rei de Fafe, Fafe','Empresário',['Alzheimer','Doença crónica dos rins'],10,10).
 
 centro_saude(1,'USFVida+','Vila Verde',253123456,'usfvida+@hotmail.com').
 centro_saude(2,'UCSP Quarteira','Quarteira',244322111,'ucspquart@info.gmailcom').
@@ -60,7 +59,6 @@ centro_saude(7,'Centro Saúde Lousã', 'Alameda Juiz Conselheiro Nunes Ribeiro, 
 centro_saude(8,'Centro de Saúde S.Pedro do Sul','Avenida da Ponte, São Pedro do Sul',224123412, 'saintpetersouth@minsaude.com').
 centro_saude(9,'Centro Saúde Ovar', 'Rua Dr. Francisco Zagalo s/n, OVAR', 245245245,'ovarhashealth@minsaude.com').
 centro_saude(10,'Centro de Saude Almodovar','Rua Professor Dr Fernando Padua, ALMODOVAR', 263264265,'almodovaralmodovar@minsaude.com').
-
 
 staff(1,1,'Maria Silva','maria@gmail.com').
 staff(2,1,'Joana Guerra','joana@gmail.com').
@@ -87,7 +85,7 @@ vacinacao_covid(5,4,date(2021,4,1),'Pfizer',2).
 vacinacao_covid(6,3,date(2021,4,10),'AstraZeneca',2).
 vacinacao_covid(7,6,date(2021,2,5),'AstraZeneca',1).            %vacinada indevidamente
 
-%medico_familia : #idmedico,nome,email,idcentro ↝ { 𝕍, 𝔽 }
+%medico_familia: #Idmedico,Nome,Email,Idcentro ↝ { 𝕍, 𝔽 }
 medico_familia(1,'Carlos Estevão','carlitos@gmail.com',1).
 medico_familia(2,'Maria Silvana','silvana@gmail.com',3).
 medico_familia(3,'Rogério Magalhães','magalhaes@gmail.com',2).
@@ -101,31 +99,28 @@ medico_familia(10,'Luisa Sobral','sobraleurovision@almodovarcs.pt',10).
 medico_familia(11,'Salvador Sentido','semsentid@gmail.com',9).
 medico_familia(12,'Manuel Rodrigues','sarmanu@sapo.pt',8).
 
-
-% consulta:#IdConsult,#IdUt,#idmedico,#idcentro,Descrição,Custo,,Data ↝ { 𝕍, 𝔽 }
-consulta(1,1,2,3,'Consulta de rotina',15.00,(2021,4,21)).
-consulta(2,2,1,1,'Dores pós vacinação',7.50,(2021,4,11)).
-consulta(3,2,3,2,'Relatorio medicação HIV',15.00,(2021,3,7)).
-consulta(4,4,5,5,'Formulação de baixa laboral',70.00,(2021,7,1)).
-consulta(5,4,4,4,'Avaliacao de teste psicotécnico',20.70,(2021,5,11)).
-consulta(6,5,7,7,'Consulta de rotina',15.00,(2021,11,3)).
-consulta(7,7,8,9,'Consulta de rotina',15.00,(2021,7,6)).
-consulta(8,8,6,6,'Verificação exames diabéticos',15.00,(2021,2,13)).
-consulta(9,9,11,9,'Consulta de rotina',15.00,(2021,1,11)).
-consulta(10,9,11,9,'Marcação de exames rotineiros',5.00,(2021,5,10)).
-
-
+% consulta:#Idconsulta,#Idutente,#Idmedico,#Idcentro,Descrição,Custo,Data ↝ { 𝕍, 𝔽 }
+consulta(1,1,2,3,'Consulta de rotina',15.00,date(2021,4,21)).
+consulta(2,2,1,1,'Dores pós vacinação',7.50,date(2021,4,11)).
+consulta(3,2,3,2,'Relatorio medicação HIV',15.00,date(2021,3,7)).
+consulta(4,4,5,5,'Formulação de baixa laboral',70.00,date(2021,7,1)).
+consulta(5,4,4,4,'Avaliacao de teste psicotécnico',20.70,date(2021,5,11)).
+consulta(6,5,7,7,'Consulta de rotina',15.00,date(2021,11,3)).
+consulta(7,7,8,9,'Consulta de rotina',15.00,date(2021,7,6)).
+consulta(8,8,6,6,'Verificação exames diabéticos',15.00,date(2021,2,13)).
+consulta(9,9,11,9,'Consulta de rotina',15.00,date(2021,1,11)).
+consulta(10,9,11,9,'Marcação de exames rotineiros',5.00,date(2021,5,10)).
 
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Predicados para simplificar a verificação da existência de um certo utente, centro, staff ou vacinação
 
-utente(ID) :- utente(ID,_,_,_,_,_,_,_,_,_).
+utente(ID) :- utente(ID,_,_,_,_,_,_,_,_,_,_).
 centro_saude(ID) :- centro_saude(ID,_,_,_,_).
 staff(ID) :- staff(ID,_,_,_).
 vacinacao_covid(Idstaff,Idutente) :- vacinacao_covid(Idstaff,Idutente,_,_,_).
-medico_familia(IdMedico):-medico_familia(IdMedico,_,_,_).
-consulta(IdUtente,IdMedico) :- consulta(_,IdUtente,IdMedico,_,_,_,_).
+medico_familia(Idmedico) :- medico_familia(Idmedico,_,_,_).
+consulta(Idconsulta) :- consulta(Idconsulta,_,_,_,_,_,_).
 
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
@@ -134,18 +129,18 @@ consulta(IdUtente,IdMedico) :- consulta(_,IdUtente,IdMedico,_,_,_,_).
 fase(1,Id,date(2021,2,1)) :- idade(Id,I), I>=80.
 faseLista(1,L,date(2021,2,1)) :- solucoes(Id,fase(1,Id,date(2021,2,1)),L).
 
-fase(2,Id,date(2021,3,16)) :- utente(Id,_,_,_,_,_,_,_,DoencasCronicas,_), nao(vazia(DoencasCronicas)).
+fase(2,Id,date(2021,3,16)) :- utente(Id,_,_,_,_,_,_,_,DoencasCronicas,_,_), nao(vazia(DoencasCronicas)).
 faseLista(2,L,date(2021,3,16)) :- solucoes(Id,fase(2,Id,date(2021,3,16)),L).
 
 fase(3,Id,date(2021,4,29)) :- 
-    utente(Id,_,_,_,_,_,_,Profissao,_,_),
+    utente(Id,_,_,_,_,_,_,Profissao,_,_,_),
     pertence(Profissao,['Médica','Médico','Enfermeira','Enfermeiro','Auxiliar de Saúde','Professora','Professor']).
 faseLista(3,L,date(2021,4,29)) :- solucoes(Id,fase(3,Id,date(2021,4,29)),L).
 
 fase(4,Id,date(2021,6,12)) :- utente(Id), nao(fase(1,Id,_)), nao(fase(2,Id,_)), nao(fase(3,Id,_)).
 faseLista(4,L,date(2021,6,12)) :- solucoes(Id,fase(4,Id,date(2021,6,12)),L).
 
-idade(Id,I) :- utente(Id,_,_,Data_Nasc,_,_,_,_,_,_), date(DataAtual), date_interval(DataAtual,Data_Nasc, I years).
+idade(Id,I) :- utente(Id,_,_,Data_Nasc,_,_,_,_,_,_,_), date(DataAtual), date_interval(DataAtual,Data_Nasc, I years).
 vazia([]).
 pertence(X,[X|L]).
 pertence(X,[Y|L]) :- X\=Y, pertence(X,L).
@@ -206,8 +201,8 @@ si(Questao,desconhecido) :- nao(Questao), nao(-Questao).
 %---- Registos
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % utente
-registarUtente(Idutente,NISS,Nome,Data_Nasc,Email,Telefone,Morada,Profissao,DoencasCronicas,Idcentro) :-
-    evolucao(utente(Idutente,NISS,Nome,Data_Nasc,Email,Telefone,Morada,Profissao,DoencasCronicas,Idcentro)).
+registarUtente(Idutente,NISS,Nome,Data_Nasc,Email,Telefone,Morada,Profissao,DoencasCronicas,Idcentro,Idmedico) :-
+    evolucao(utente(Idutente,NISS,Nome,Data_Nasc,Email,Telefone,Morada,Profissao,DoencasCronicas,Idcentro,Idmedico)).
 
 
 % centro_saude
@@ -239,8 +234,8 @@ registarConsulta(IdConsulta,IdUtente,IdMedico,IdCentro,Descricao,Custo,Data):-
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % utente
 removerUtente(Idutente) :-
-    utente(Idutente,NISS,Nome,Data_Nasc,Email,Telefone,Morada,Profissao,DoencasCronicas,Idcentro),
-    involucao(utente(Idutente,NISS,Nome,Data_Nasc,Email,Telefone,Morada,Profissao,DoencasCronicas,Idcentro)).
+    utente(Idutente,NISS,Nome,Data_Nasc,Email,Telefone,Morada,Profissao,DoencasCronicas,Idcentro,Idmedico),
+    involucao(utente(Idutente,NISS,Nome,Data_Nasc,Email,Telefone,Morada,Profissao,DoencasCronicas,Idcentro,Idmedico)).
 
 
 % centro_saude
@@ -259,18 +254,19 @@ removerStaff(Idstaff) :-
 removerVacinacao(Idstaff,Idutente,Data,Vacina,Toma) :-
     involucao(vacinacao_covid(Idstaff,Idutente,Data,Vacina,Toma)).
 
-% Medico
-removerMedico(IdMedico):-
-    medico_familia(IdMedico,Nome,Email,IdCentro),
-    involucao(medico_familia(IdMedico,Nome,Email,IdCentro)).
+% medico_familia
+removerMedico(Idmedico) :-
+    medico_familia(Idmedico,Nome,Email,IdCentro),
+    involucao(medico_familia(Idmedico,Nome,Email,IdCentro)).
 
-%consulta
+% consulta
+removerConsulta(Idconsulta) :-
+    consulta(Idconsulta,Idutente,Idmedico,Idcentro,Descricao,Custo,Data),
+    involucao(consulta(Idconsulta,Idutente,Idmedico,Idcentro,Descricao,Custo,Data)).
 
-removerConsulta(IdConsulta,IdUtente,IdMedico,IdCentro,Descricao,Custo,Data):-
-    involucao(consulta(IdConsulta,IdUtente,IdMedico,IdCentro,Descricao,Custo,Data)).
 
-
-%--- Extras
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+% Extras
 
 
 %custo total consultas por utente
@@ -278,19 +274,23 @@ removerConsulta(IdConsulta,IdUtente,IdMedico,IdCentro,Descricao,Custo,Data):-
 
 
 % Não pode haver mais que um utente com o mesmo identificador
-+utente(Idutente,NISS,Nome,Data_Nasc,Email,Telefone,Morada,Profissao,DoencasCronicas,Idcentro) :: 
++utente(Idutente,_,_,_,_,_,_,_,_,_,_) :: 
                 (solucoes(Idutente,utente(Idutente),S),
                  comprimento(S,N),
                  N==1).
 
 % Não pode haver um utente registado num centro de saúde que não seja conhecido pelo sistema
-+utente(_,_,_,_,_,_,_,_,_,Idcentro) :: 
++utente(_,_,_,_,_,_,_,_,_,Idcentro,_) :: 
                 (solucoes(Idcentro,centro_saude(Idcentro),S),
                  comprimento(S,N),
                  N>0).                 
 
+% Não pode haver um utente com um médico de família que não seja do seu centro de saúde
++utente(_,_,_,_,_,_,_,_,_,Idcentro,Idmedico) :: 
+                medico_familia(Idmedico,_,_,IdCentro).
+
 % Não pode haver uma vacinação feita por uma pessoa do staff a um utente que não sejam conhecidos pelo sistema
-+vacinacao_covid(Idstaff,Idutente,Data,Vacina,Toma) :: 
++vacinacao_covid(Idstaff,Idutente,_,_,_) :: 
                 (solucoes((Idstaff,Idutente),(staff(Idstaff),utente(Idutente)),S),
                  comprimento(S,N),
                  N==1). 
@@ -299,54 +299,72 @@ removerConsulta(IdConsulta,IdUtente,IdMedico,IdCentro,Descricao,Custo,Data):-
 +vacinacao_covid(Idstaff,Idutente,Data,Vacina,Toma) :: 
                 (solucoes((Idstaff,Idutente),vacinacao_covid(Idstaff,Idutente,Data,Vacina,Toma),S),
                  comprimento(S,N),
-                 N==1). 
+                 N==1).
 
-% Não pode haver mais que um utente com o mesmo identificador
-+centro_saude(Idcentro,Nome,Morada,Telefone,Email) ::
+% Não pode haver uma segunda toma da vacina sem haver a primeira
++vacinacao_covid(Idstaff,Idutente,Data,Vacina,2) :: 
+                (solucoes((Idstaff,Idutente),vacinacao_covid(Idstaff,Idutente,Data,Vacina,1),S),
+                 comprimento(S,N),
+                 N==1).
+
+% Não pode haver mais que um centro de saude com o mesmo identificador
++centro_saude(Idcentro,_,_,_,_) ::
                 (solucoes(Idcentro,centro_saude(Idcentro),S),
                 comprimento(S,N),
                 N==1).
 
-% Não pode haver mais que um utente com os mesmos dados
+% Não pode haver mais que um centro de saude com os mesmos dados
 +centro_saude(Idcentro,Nome,Morada,Telefone,Email) ::
                 (solucoes(Idcentro,centro_saude(Idcentro,Nome,Morada,Telefone,Email),S),
                 comprimento(S,N),
                 N==1).
 
 % Não pode haver mais que um staff com o mesmo identificador
-+staff(Idstaff,Idcentro,Nome,Email) ::
++staff(Idstaff,_,_,_) ::
                 (solucoes(Idstaff,staff(Idstaff),S),
                  comprimento(S,N),
                  N==1).
 
-
 % Não pode haver staff de um centro de saúde que não é conhecido pelo sistema
-+staff(Idstaff,Idcentro,Nome,Email) ::
++staff(_,Idcentro,_,_) ::
                 (solucoes(Idcentro,centro_saude(Idcentro),S),
                 comprimento(S,N),
                 N>0).
 
-% Não pode ser retirado um utente que ainda não tenha a vacinação completa
--utente(Idutente,NISS,Nome,Data_Nasc,Email,Telefone,Morada,Profissao,DoencasCronicas,Idcentro) ::
-                (vacinacao_covid(_,Idutente,_,_,2)).
-
-% Não pode ser retirado um centro de saúde que tenha utentes registados
--centro_saude(Idcentro,Nome,Morada,Telefone,Email) ::
-                (solucoes(Idutente,(utente(Idutente,_,_,_,_,_,_,_,_,Idcentro)),S),
-                comprimento(S,N),
-                N==0).
-
 % Não pode haver mais que um medico com o mesmo identificador
-+medico_familia(Idmedico,Nome,Email,IdCentro) ::
++medico_familia(Idmedico,_,_,_) ::
                 (solucoes(Idmedico,medico_familia(Idmedico),S),
                  comprimento(S,N),
                  N==1).
 
-% Não pode haver uma consulta feita por um medico a um utente que não sejam conhecidos pelo sistema
-+consulta(IdConsult,Idutente,Idmedico,IdCentro,Descricao,Custo,Data) :: 
+% Não pode haver mais que uma consulta com o mesmo identificador
++consulta(Idconsulta,_,_,_,_,_,_) ::
+                (solucoes(Idconsulta,consulta(Idconsulta),S),
+                 comprimento(S,N),
+                 N==1).
+
+% Não pode haver uma consulta feita por um médico a um utente que não sejam conhecidos pelo sistema
++consulta(_,Idutente,Idmedico,_,_,_,_) :: 
                 (solucoes((Idmedico,Idutente),(medico_familia(Idmedico),utente(Idutente)),S),
                  comprimento(S,N),
                 N==1).
+
+% Não pode ser retirado um utente que ainda não tenha a vacinação completa
+-utente(Idutente,_,_,_,_,_,_,_,_,_,_) ::
+                (vacinacao_covid(_,Idutente,_,_,2)).
+
+% Não pode ser retirado um centro de saúde que tenha utentes registados
+-centro_saude(Idcentro,_,_,_,_) ::
+                (solucoes(Idutente,(utente(Idutente,_,_,_,_,_,_,_,_,Idcentro,_)),S),
+                comprimento(S,N),
+                N==0).
+
+% Não pode ser retirado um médico de família que seja médico de um utente registado
+-medico_familia(Idmedico,_,_,_) ::
+                (solucoes(Idutente,utente(Idutente,_,_,_,_,_,_,_,_,_,Idmedico),S),
+                comprimento(S,N),
+                N==0).
+
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Extensao do predicado que permite a evolucao do conhecimento
