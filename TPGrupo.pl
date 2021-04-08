@@ -37,6 +37,8 @@ encoding(iso_latin_1).
 %staff(Idstaff,Idcentro,Nome,Email).
 %vacinacao_covid: #Staff, #Utente, Data, Vacina, Toma↝ { 𝕍, 𝔽 }
 %vacinacao_covid(Idstaff,Idutente,Data,Vacina,Toma).
+%medico_familia: #Medico,Nome,Email,#Centro ↝ { 𝕍, 𝔽 }
+%consulta:#Consulta,#Utente,#Medico,#Centro,Descrição,Custo,Data ↝ { 𝕍, 𝔽 }
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Base de conhecimento (com exemplos arbitrários)
@@ -87,7 +89,6 @@ vacinacao_covid(5,4,date(2021,4,1),'Pfizer',2).
 vacinacao_covid(6,3,date(2021,4,10),'AstraZeneca',2).
 vacinacao_covid(7,6,date(2021,2,5),'AstraZeneca',1).            %vacinada indevidamente
 
-%medico_familia: #Idmedico,Nome,Email,Idcentro ↝ { 𝕍, 𝔽 }
 medico_familia(1,'Carlos Estevão','carlitos@gmail.com',1).
 medico_familia(2,'Maria Silvana','silvana@gmail.com',3).
 medico_familia(3,'Rogério Magalhães','magalhaes@gmail.com',2).
@@ -101,7 +102,6 @@ medico_familia(10,'Luisa Sobral','sobraleurovision@almodovarcs.pt',10).
 medico_familia(11,'Salvador Sentido','semsentid@gmail.com',9).
 medico_familia(12,'Manuel Rodrigues','sarmanu@sapo.pt',8).
 
-% consulta:#Idconsulta,#Idutente,#Idmedico,#Idcentro,Descrição,Custo,Data ↝ { 𝕍, 𝔽 }
 consulta(1,1,2,'Consulta de rotina',15.00,date(2021,4,21)).
 consulta(2,2,1,'Dores pós vacinação',7.50,date(2021,4,11)).
 consulta(3,2,3,'Relatorio medicação HIV',15.00,date(2021,3,7)).
@@ -115,9 +115,10 @@ consulta(10,9,11,'Marcação de exames rotineiros',5.00,date(2021,5,10)).
 
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
-% Predicados para simplificar a verificação da existência de um certo utente, centro, staff ou vacinação
+% Predicados para simplificação
 
 utente(ID) :- utente(ID,_,_,_,_,_,_,_,_,_,_).
+utente(ID, Nome) :- utente(ID,_,Nome,_,_,_,_,_,_,_,_).
 centro_saude(ID) :- centro_saude(ID,_,_,_,_).
 staff(ID) :- staff(ID,_,_,_).
 vacinacao_covid(Idstaff,Idutente) :- vacinacao_covid(Idstaff,Idutente,_,_,_).
@@ -143,11 +144,13 @@ fase(4,Id,date(2021,6,12)) :- utente(Id), nao(fase(1,Id,_)), nao(fase(2,Id,_)), 
 faseLista(4,L,date(2021,6,12)) :- solucoes(Id,fase(4,Id,date(2021,6,12)),L).
 
 idade(Id,I) :- utente(Id,_,_,Data_Nasc,_,_,_,_,_,_,_), date(DataAtual), date_interval(DataAtual,Data_Nasc, I years).
+
 vazia([]).
+
 pertence(X,[X|L]).
 pertence(X,[Y|L]) :- X\=Y, pertence(X,L).
 
-verificaFase(F, Id, Data):-fase(F, Id, Data), !.
+verificaFase(F, Id, Data) :- fase(F, Id, Data), !.
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Identificar pessoas nao vacinadas
@@ -172,6 +175,8 @@ vacinada(Id) :- utente(Id), vacinacao_covid(_,Id).
 vacinada(Id,2) :- utente(Id), vacinacao_covid(_,Id,_,_,2).
 vacinada(Id,1) :- utente(Id), vacinacao_covid(_,Id,_,_,1).
 
+vacinadas(S) :- solucoes(Id,vacinada(Id),S).
+
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Identificar pessoas vacinadas indevidamente
@@ -186,6 +191,7 @@ vacinadas_indevidamente(S) :- solucoes(Id,vacinada_indevidamente(Id),S).
 
 -candidata(Id) :- nao(candidata(Id)).
 candidata(Id) :- utente(Id), nao(vacinada(Id)), date(DataAtual), verificaFase(_,Id,DataFase), date_compare(DataAtual,>=,DataFase).
+
 candidatas(S) :- solucoes(Id,candidata(Id),S).
 
 
@@ -195,36 +201,6 @@ candidatas(S) :- solucoes(Id,candidata(Id),S).
 -segunda_toma(Id) :- nao(segunda_toma(Id)).
 segunda_toma(Id) :- utente(Id), vacinada(Id,1), nao(vacinada(Id,2)).
 
-%custo total consultas por utente
-custo_consultas(Idutente,Total) :- utente(Idutente), solucoes(Custo,consulta(_,Idutente,_,_,Custo,_),S), sum_list(S,Total).
-
-%lista de centros de saude
-centrosSaude(C) :- solucoes(Id-Centro,centro_saude(Id,Centro,_,_,_),S),
-                                   sort(S,C).
-
-%lista de utentes
-utentes(C) :- solucoes(Utente,utente(_,_,Utente,_,_,_,_,_,_,_,_),S),
-                                    sort(S,C).
-
-%lista de staff
-staffs(C) :- solucoes(Staff,staff(_,_,Staff,_),S),
-                                    sort(S,C).
-
-%lista de medicos
-medicos(C) :- solucoes(Medico,medico_familia(_,Medico,_,_),S),
-                                   sort(S,C).
-
-medicosPorCentro(IdC,C) :- centro_saude(IdC), solucoes(Nome,medico_familia(_,Nome,_,IdC),S),
-                                    sort(S,C).
-
-utentesPorCentro(IdC,C) :- centro_saude(IdC), solucoes(Nome,utente(_,_,Nome,_,_,_,_,_,_,_,IdC),S),
-                                    sort(S,C).
-
-staffPorCentro(IdC,C) :- centro_saude(IdC), solucoes(Nome,staff(_,IdC,Nome,_),S),
-                                    sort(S,C).
-
-%lista de pessoas nao vacinadas
-naoVacinadas(S) :- solucoes(Id, -vacinada(Id), S).
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Desenvolver um sistema de inferência capaz de implementar os mecanismos de raciocínio inerentes a estes sistemas.
@@ -232,6 +208,63 @@ naoVacinadas(S) :- solucoes(Id, -vacinada(Id), S).
 si(Questao,verdadeiro) :- Questao.
 si(Questao,falso) :- -Questao.
 si(Questao,desconhecido) :- nao(Questao), nao(-Questao).
+
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+% Custo total de consultas por utente
+
+custo_consultas(Idutente,Total) :- utente(Idutente), solucoes(Custo,consulta(_,Idutente,_,_,Custo,_),S), sum_list(S,Total).
+
+
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+% Lista de centros de saude
+
+centrosSaude(C) :- solucoes(Id-Centro,centro_saude(Id,Centro,_,_,_),S),
+                                   sort(S,C).
+
+
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+%lista de utentes
+
+utentes(C) :- solucoes(Utente,utente(_,_,Utente,_,_,_,_,_,_,_,_),S),
+                                    sort(S,C).
+
+
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+% Lista de staff
+staffs(C) :- solucoes(Staff,staff(_,_,Staff,_),S),
+                                    sort(S,C).
+
+
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+% Lista de medicos
+
+medicos(C) :- solucoes(Medico,medico_familia(_,Medico,_,_),S),
+                                   sort(S,C).
+
+
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+% 
+
+medicosPorCentro(IdC,C) :- centro_saude(IdC), solucoes(Nome,medico_familia(_,Nome,_,IdC),S),
+                                    sort(S,C).
+
+
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+
+utentesPorCentro(IdC,C) :- centro_saude(IdC), solucoes(Nome,utente(_,_,Nome,_,_,_,_,_,_,_,IdC),S),
+                                    sort(S,C).
+
+
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+
+staffPorCentro(IdC,C) :- centro_saude(IdC), solucoes(Nome,staff(_,IdC,Nome,_),S),
+                                    sort(S,C).
+
+
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+% Lista de pessoas nao vacinadas
+
+naoVacinadas(S) :- solucoes(Id, -vacinada(Id), S).
 
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
@@ -437,3 +470,6 @@ comprimento(S,N) :- length(S,N).
 
 print([E]) :- write('\t'), write(E), write('\n'). 
 print([H|T]) :- write('\t'), write(H), write('\n'), print(T).
+
+getNames([E], [Nome]):- utente(E, Nome). 
+getNames([H|T], [Nome|R]):- utente(H, Nome), getNames(T,R).

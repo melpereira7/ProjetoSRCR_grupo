@@ -39,6 +39,9 @@ menu:- write('\n'),
        write('21.Listar os utentes por centro de saúde\n'), 
        write('22.Listar o staff por centro de saúde\n'), 
        write('23.Listar as pessoas não vacinadas\n'), 
+       write('24.Listar as pessoas vacinadas\n'), 
+       write('25.Listar as pessoas vacinadas indevidamente\n'), 
+       write('26.Listar as pessoas candidatas a vacinação\n'), 
        write('0.Sair \n'),
        write('>> '),
        read(Option),
@@ -67,10 +70,9 @@ executar(Option):-Option=:=1,addUtente,menu;
                   Option=:=21,listagemUtentesPorCentro,menu;
                   Option=:=22,listagemStaffPorCentro,menu;
                   Option=:=23,listagemPessoasNaoVacinadas,menu;
-                 % Option=:=23,listagemPessoasNaoVacinadas,menu;
-                 % Option=:=23,listagemPessoasNaoVacinadas,menu;
-                 % Option=:=23,listagemPessoasNaoVacinadas,menu;
-                 % Option=:=23,listagemPessoasNaoVacinadas,menu;
+                  Option=:=24,listagemVacinadas,menu;
+                  Option=:=25,listagemVacinadasIndevidamente,menu;
+                  Option=:=26,listagemPessoasCandidatas,menu;
                   Option=:=99,true,make,menu;
                   Option=:=0,true,write('Goodbye.'),halt.
 
@@ -229,13 +231,16 @@ listagemStaffPorCentro:-centrosSaude(Centros), print(Centros),
                           ansi_format([bold,fg(cyan)], '~w\n', [Staff]).
 
 listagemPessoasNaoVacinadas:-naoVacinadas(Pessoas),
-                             ansi_format([bold,fg(cyan)], '~w\n', [Pessoas]).
+                             getNames(Pessoas, R),
+                             ansi_format([bold,fg(cyan)], '~w\n', [R]).
 
-% vacinadas
-% vacinadas indevidamente
+listagemVacinadasIndevidamente :- vacinadas_indevidamente(S),
+                                  getNames(S, R),
+                                  ansi_format([bold,fg(cyan)],'~w\n',[R]).
 
-listagemVacinadasIndevidamente :- vacinadas_indevidamente(S), 
-                                  ansi_format([bold,fg(cyan)],'~w\n',[S]).
+listagemPessoasCandidatas :- candidatas(S),
+                             getNames(S, R),
+                             ansi_format([bold,fg(cyan)],'~w\n',[R]).
 
-listagemPessoasCandidatas :- candidatas(S), 
-                             ansi_format([bold,fg(cyan)],'~w\n',[S]).
+listagemVacinadas :- vacinadas(S),
+                     ansi_format([bold,fg(cyan)],'~w\n',[S]).
