@@ -43,6 +43,7 @@ centro_saude(8,'Centro de Saúde S.Pedro do Sul','Avenida da Ponte, São Pedro d
 centro_saude(9,'Centro Saúde Ovar', 'Rua Dr. Francisco Zagalo s/n, OVAR', 245245245,'ovarhashealth@minsaude.com').
 centro_saude(10,'Centro de Saude Almodovar','Rua Professor Dr Fernando Padua, ALMODOVAR', 263264265,'almodovaralmodovar@minsaude.com').
 
+
 %staff: #Staff, #Centro, Nome, email ↝ { 𝕍, 𝔽 }
 staff(1,1,'Maria Silva','maria@gmail.com').
 staff(2,1,'Joana Guerra','joana@gmail.com').
@@ -98,5 +99,3 @@ consulta(7,7,8,'Consulta de rotina',15.00,date(2021,7,6)).
 consulta(8,8,6,'Verificação exames diabéticos',15.00,date(2021,2,13)).
 consulta(9,9,11,'Consulta de rotina',15.00,date(2021,1,11)).
 consulta(10,9,11,'Marcação de exames rotineiros',5.00,date(2021,5,10)).
-
-

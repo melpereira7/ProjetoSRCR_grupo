@@ -244,5 +244,3 @@ involucao(Termo) :- solucoes(Invariante,-Termo::Invariante,Lista), remocao(Termo
 
 remocao(Termo) :- retract(Termo).
 remocao(Termo) :- assert(Termo),!,fail.
-
-
