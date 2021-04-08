@@ -1,8 +1,5 @@
-encoding(iso_latin_1).
-
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Instrumento de avaliação em grupo
-
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Declaracoes iniciais
@@ -16,6 +13,8 @@ encoding(iso_latin_1).
 
 %para dar up do menu
 :- consult(menu).
+
+
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Definicoes iniciais
 
@@ -38,7 +37,9 @@ encoding(iso_latin_1).
 %vacinacao_covid: #Staff, #Utente, Data, Vacina, Toma↝ { 𝕍, 𝔽 }
 %vacinacao_covid(Idstaff,Idutente,Data,Vacina,Toma).
 %medico_familia: #Medico,Nome,Email,#Centro ↝ { 𝕍, 𝔽 }
+%medico_familia(Idmedico,Nome,Email,Idcentro).
 %consulta:#Consulta,#Utente,#Medico,#Centro,Descrição,Custo,Data ↝ { 𝕍, 𝔽 }
+%consulta(Idconsulta,Idutente,Idmedico,Idcentro,Descrição,Custo,Data).
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Base de conhecimento (com exemplos arbitrários)
@@ -152,6 +153,7 @@ pertence(X,[Y|L]) :- X\=Y, pertence(X,L).
 
 verificaFase(F, Id, Data) :- fase(F, Id, Data), !.
 
+
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Identificar pessoas nao vacinadas
 
@@ -164,6 +166,8 @@ verificaFase(F, Id, Data) :- fase(F, Id, Data), !.
 -vacinada(Id,2) :- utente(Id), nao(vacinacao_covid(_,Id,_,_,2)).
 % extra
 %-vacinada(Id,T) :- nao(vacinada(Id,T)), nao(excecao(vacinada(Id,T))).
+
+naoVacinadas(S) :- solucoes(Id, -vacinada(Id), S).
 
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
@@ -185,6 +189,7 @@ vacinadas(S) :- solucoes(Id,vacinada(Id),S).
 vacinada_indevidamente(Id) :- vacinacao_covid(_,Id,DataVac,_,1), verificaFase(_,Id,DataFase), date_compare(DataFase,>,DataVac).
 
 vacinadas_indevidamente(S) :- solucoes(Id,vacinada_indevidamente(Id),S).
+
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Identificar pessoas não vacinadas e que são candidatas a vacinação
@@ -208,6 +213,7 @@ segunda_toma(Id) :- utente(Id), vacinada(Id,1), nao(vacinada(Id,2)).
 si(Questao,verdadeiro) :- Questao.
 si(Questao,falso) :- -Questao.
 si(Questao,desconhecido) :- nao(Questao), nao(-Questao).
+
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Custo total de consultas por utente
@@ -243,28 +249,24 @@ medicos(C) :- solucoes(Medico,medico_familia(_,Medico,_,_),S),
 
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
-% 
+% Lista de médicos de um determinado centro de saúde
 
 medicosPorCentro(IdC,C) :- centro_saude(IdC), solucoes(Nome,medico_familia(_,Nome,_,IdC),S),
                                     sort(S,C).
 
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
+% Lista de utentes de um determinado centro
 
 utentesPorCentro(IdC,C) :- centro_saude(IdC), solucoes(Nome,utente(_,_,Nome,_,_,_,_,_,_,_,IdC),S),
                                     sort(S,C).
 
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
+% Lista de pessoas do staff de um determinado centro
 
 staffPorCentro(IdC,C) :- centro_saude(IdC), solucoes(Nome,staff(_,IdC,Nome,_),S),
                                     sort(S,C).
-
-
-%--------------------------------- - - - - - - - - - -  -  -  -  -   -
-% Lista de pessoas nao vacinadas
-
-naoVacinadas(S) :- solucoes(Id, -vacinada(Id), S).
 
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
@@ -274,16 +276,13 @@ naoVacinadas(S) :- solucoes(Id, -vacinada(Id), S).
 registarUtente(Idutente,NISS,Nome,Data_Nasc,Email,Telefone,Morada,Profissao,DoencasCronicas,Idcentro,Idmedico) :-
     evolucao(utente(Idutente,NISS,Nome,Data_Nasc,Email,Telefone,Morada,Profissao,DoencasCronicas,Idcentro,Idmedico)).
 
-
 % centro_saude
 registarCentro(Id,Nome,Morada,Telefone,Email) :-
     evolucao(centro_saude(Id,Nome,Morada,Telefone,Email)).
 
-
 % staff
 registarStaff(Idstaff,Idcentro,Nome,Email) :-
     evolucao(staff(Idstaff,Idcentro,Nome,Email)).
-
 
 % vacinacao_covid
 registarVacinacao(Idstaff,Idutente,Data,Vacina,Toma) :-
@@ -292,7 +291,6 @@ registarVacinacao(Idstaff,Idutente,Data,Vacina,Toma) :-
 % medico_familia
 registarMedico(IdMedico,Nome,Email,IdCentro):-
     evolucao(medico_familia(Idstaff,Nome,Email,IdCentro)).
-
 
 %consulta
 registarConsulta(IdConsulta,IdUtente,IdMedico,Descricao,Custo,Data):-
@@ -307,18 +305,15 @@ removerUtente(Idutente) :-
     utente(Idutente,NISS,Nome,Data_Nasc,Email,Telefone,Morada,Profissao,DoencasCronicas,Idcentro,Idmedico),
     involucao(utente(Idutente,NISS,Nome,Data_Nasc,Email,Telefone,Morada,Profissao,DoencasCronicas,Idcentro,Idmedico)).
 
-
 % centro_saude
 removerCentro(Idcentro) :-
     centro_saude(Idcentro,Nome,Morada,Telefone,Email),
     involucao(centro_saude(Idcentro,Nome,Morada,Telefone,Email)).
 
-
 % staff
 removerStaff(Idstaff) :-
     staff(Idstaff,Idcentro,Nome,Email),
     involucao(staff(Idstaff,Idcentro,Nome,Email)).
-
 
 % vacinacao_covid
 removerVacinacao(Idstaff,Idutente,Data,Vacina,Toma) :-
@@ -336,11 +331,8 @@ removerConsulta(Idconsulta) :-
 
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
-% Extras
-
-
-
-
+%---- Invariantes
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Não pode haver mais que um utente com o mesmo identificador
 +utente(Idutente,_,_,_,_,_,_,_,_,_,_) :: 
                 (solucoes(Idutente,utente(Idutente),S),

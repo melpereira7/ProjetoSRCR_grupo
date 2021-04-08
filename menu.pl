@@ -5,6 +5,7 @@
 :- style_check(-discontiguous).
 :- set_prolog_flag(w:unknown,fail).
 
+
 % ------------------------------ Menu ------------------------------------------
 
 menu:- write('\n'),
@@ -75,6 +76,7 @@ executar(Option):-Option=:=1,addUtente,menu;
                   Option=:=26,listagemPessoasCandidatas,menu;
                   Option=:=99,true,make,menu;
                   Option=:=0,true,write('Goodbye.'),halt.
+
 
 /* -------------------------------- INSERÇÕES -------------------------------- */
 
@@ -171,6 +173,7 @@ deleteMedico:-write('Id médico: '), read(Idmedico),
 deleteConsulta:-write('Id Consulta: '),read(Idconsulta),
                   removerConsulta(Idconsulta),
                   ansi_format([bold,fg(green)], 'Sucesso! ~w', ['\n']).
+
 
 /* ------------------------------- CONSULTAS ---------------------------------- */
 
