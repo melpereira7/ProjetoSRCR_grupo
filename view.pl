@@ -79,7 +79,7 @@ executar(Option):-Option=:=1,addUtente,menu;
                   Option=:=26,listagemPessoasCandidatas,menu;
                   Option=:=27,listagemPessoasSemSegundaToma,menu;
                   Option=:=99,true,make,menu;
-                  Option=:=0,true,write('Goodbye.'),halt.
+                  Option=:=0,true,write('Goodbye.\n'),halt.
 
 
 /* -------------------------------- INSERÇÕES -------------------------------- */

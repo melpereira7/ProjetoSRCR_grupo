@@ -1,23 +1,4 @@
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
-% Declarações iniciais
-
-:- style_check(-singleton).
-:- style_check(-discontiguous).
-:- set_prolog_flag(w:unknown,fail).
-
-%--------------------------------- - - - - - - - - - -  -  -  -  -   -
-% Definicoes iniciais
-
-:- dynamic (-)/1.
-:- dynamic utente/11.
-:- dynamic centro_saude/5.
-:- dynamic staff/4.
-:- dynamic vacinacao_covid/5.
-:- dynamic medico_familia/4.
-:- dynamic consulta/6.
-
-
-%--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Base de conhecimento (com exemplos arbitrários)
 
 %utente: #Utente, Nº Segurança_Social, Nome, Data_Nasc, Email, Telefone, Morada, Profissão, [Doenças_Crónicas], #CentroSaúde, #MédicoDeFamília ↝ { 𝕍, 𝔽}
