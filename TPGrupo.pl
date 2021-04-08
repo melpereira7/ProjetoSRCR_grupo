@@ -1,3 +1,5 @@
+encoding(iso_latin_1).
+
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Instrumento de avaliação em grupo
 
@@ -100,16 +102,16 @@ medico_familia(11,'Salvador Sentido','semsentid@gmail.com',9).
 medico_familia(12,'Manuel Rodrigues','sarmanu@sapo.pt',8).
 
 % consulta:#Idconsulta,#Idutente,#Idmedico,#Idcentro,Descrição,Custo,Data ↝ { 𝕍, 𝔽 }
-consulta(1,1,2,3,'Consulta de rotina',15.00,date(2021,4,21)).
-consulta(2,2,1,1,'Dores pós vacinação',7.50,date(2021,4,11)).
-consulta(3,2,3,2,'Relatorio medicação HIV',15.00,date(2021,3,7)).
-consulta(4,4,5,5,'Formulação de baixa laboral',70.00,date(2021,7,1)).
-consulta(5,4,4,4,'Avaliacao de teste psicotécnico',20.70,date(2021,5,11)).
-consulta(6,5,7,7,'Consulta de rotina',15.00,date(2021,11,3)).
-consulta(7,7,8,9,'Consulta de rotina',15.00,date(2021,7,6)).
-consulta(8,8,6,6,'Verificação exames diabéticos',15.00,date(2021,2,13)).
-consulta(9,9,11,9,'Consulta de rotina',15.00,date(2021,1,11)).
-consulta(10,9,11,9,'Marcação de exames rotineiros',5.00,date(2021,5,10)).
+consulta(1,1,2,'Consulta de rotina',15.00,date(2021,4,21)).
+consulta(2,2,1,'Dores pós vacinação',7.50,date(2021,4,11)).
+consulta(3,2,3,'Relatorio medicação HIV',15.00,date(2021,3,7)).
+consulta(4,4,5,'Formulação de baixa laboral',70.00,date(2021,7,1)).
+consulta(5,4,4,'Avaliacao de teste psicotécnico',20.70,date(2021,5,11)).
+consulta(6,5,7,'Consulta de rotina',15.00,date(2021,11,3)).
+consulta(7,7,8,'Consulta de rotina',15.00,date(2021,7,6)).
+consulta(8,8,6,'Verificação exames diabéticos',15.00,date(2021,2,13)).
+consulta(9,9,11,'Consulta de rotina',15.00,date(2021,1,11)).
+consulta(10,9,11,'Marcação de exames rotineiros',5.00,date(2021,5,10)).
 
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
@@ -120,7 +122,7 @@ centro_saude(ID) :- centro_saude(ID,_,_,_,_).
 staff(ID) :- staff(ID,_,_,_).
 vacinacao_covid(Idstaff,Idutente) :- vacinacao_covid(Idstaff,Idutente,_,_,_).
 medico_familia(Idmedico) :- medico_familia(Idmedico,_,_,_).
-consulta(Idconsulta) :- consulta(Idconsulta,_,_,_,_,_,_).
+consulta(Idconsulta) :- consulta(Idconsulta,_,_,_,_,_).
 
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
@@ -145,6 +147,7 @@ vazia([]).
 pertence(X,[X|L]).
 pertence(X,[Y|L]) :- X\=Y, pertence(X,L).
 
+verificaFase(F, Id, Data):-fase(F, Id, Data), !.
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Identificar pessoas nao vacinadas
@@ -173,21 +176,55 @@ vacinada(Id,1) :- utente(Id), vacinacao_covid(_,Id,_,_,1).
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Identificar pessoas vacinadas indevidamente
 
-vacinada_indevidamente(Id) :- utente(Id), vacinada(Id), vacinacao_covid(_,Id,DataVac,_,_), fase(_,Id,DataFase), !, date_compare(DataFase,>,DataVac).
+-vacinada_indevidamente(Id) :- nao(vacinada_indevidamente(Id)).
+vacinada_indevidamente(Id) :- vacinacao_covid(_,Id,DataVac,_,1), verificaFase(_,Id,DataFase), date_compare(DataFase,>,DataVac).
 
+vacinadas_indevidamente(S) :- solucoes(Id,vacinada_indevidamente(Id),S).
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Identificar pessoas não vacinadas e que são candidatas a vacinação
 
-candidata(Id) :- utente(Id), nao(vacinada(Id)), date(DataAtual), fase(_,Id,DataFase), date_compare(DataAtual,>=,DataFase).
+-candidata(Id) :- nao(candidata(Id)).
+candidata(Id) :- utente(Id), nao(vacinada(Id)), date(DataAtual), verificaFase(_,Id,DataFase), date_compare(DataAtual,>=,DataFase).
 candidatas(S) :- solucoes(Id,candidata(Id),S).
 
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Identificar pessoas a quem falta a segunda toma da vacina
 
+-segunda_toma(Id) :- nao(segunda_toma(Id)).
 segunda_toma(Id) :- utente(Id), vacinada(Id,1), nao(vacinada(Id,2)).
 
+%custo total consultas por utente
+custo_consultas(Idutente,Total) :- utente(Idutente), solucoes(Custo,consulta(_,Idutente,_,_,Custo,_),S), sum_list(S,Total).
+
+%lista de centros de saude
+centrosSaude(C) :- solucoes(Id-Centro,centro_saude(Id,Centro,_,_,_),S),
+                                   sort(S,C).
+
+%lista de utentes
+utentes(C) :- solucoes(Utente,utente(_,_,Utente,_,_,_,_,_,_,_,_),S),
+                                    sort(S,C).
+
+%lista de staff
+staffs(C) :- solucoes(Staff,staff(_,_,Staff,_),S),
+                                    sort(S,C).
+
+%lista de medicos
+medicos(C) :- solucoes(Medico,medico_familia(_,Medico,_,_),S),
+                                   sort(S,C).
+
+medicosPorCentro(IdC,C) :- centro_saude(IdC), solucoes(Nome,medico_familia(_,Nome,_,IdC),S),
+                                    sort(S,C).
+
+utentesPorCentro(IdC,C) :- centro_saude(IdC), solucoes(Nome,utente(_,_,Nome,_,_,_,_,_,_,_,IdC),S),
+                                    sort(S,C).
+
+staffPorCentro(IdC,C) :- centro_saude(IdC), solucoes(Nome,staff(_,IdC,Nome,_),S),
+                                    sort(S,C).
+
+%lista de pessoas nao vacinadas
+naoVacinadas(S) :- solucoes(Id, -vacinada(Id), S).
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Desenvolver um sistema de inferência capaz de implementar os mecanismos de raciocínio inerentes a estes sistemas.
@@ -225,8 +262,8 @@ registarMedico(IdMedico,Nome,Email,IdCentro):-
 
 
 %consulta
-registarConsulta(IdConsulta,IdUtente,IdMedico,IdCentro,Descricao,Custo,Data):-
-    evolucao(consulta(IdConsulta,IdUtente,IdMedico,IdCentro,Descricao,Custo,Data)).
+registarConsulta(IdConsulta,IdUtente,IdMedico,Descricao,Custo,Data):-
+    evolucao(consulta(IdConsulta,IdUtente,IdMedico,Descricao,Custo,Data)).
 
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
@@ -261,15 +298,13 @@ removerMedico(Idmedico) :-
 
 % consulta
 removerConsulta(Idconsulta) :-
-    consulta(Idconsulta,Idutente,Idmedico,Idcentro,Descricao,Custo,Data),
-    involucao(consulta(Idconsulta,Idutente,Idmedico,Idcentro,Descricao,Custo,Data)).
+    consulta(Idconsulta,Idutente,Idmedico,Descricao,Custo,Data),
+    involucao(consulta(Idconsulta,Idutente,Idmedico,Descricao,Custo,Data)).
 
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Extras
 
-
-%custo total consultas por utente
 
 
 
@@ -338,13 +373,13 @@ removerConsulta(Idconsulta) :-
                  N==1).
 
 % Não pode haver mais que uma consulta com o mesmo identificador
-+consulta(Idconsulta,_,_,_,_,_,_) ::
++consulta(Idconsulta,_,_,_,_,_) ::
                 (solucoes(Idconsulta,consulta(Idconsulta),S),
                  comprimento(S,N),
                  N==1).
 
 % Não pode haver uma consulta feita por um médico a um utente que não sejam conhecidos pelo sistema
-+consulta(_,Idutente,Idmedico,_,_,_,_) :: 
++consulta(_,Idutente,Idmedico,_,_,_) :: 
                 (solucoes((Idmedico,Idutente),(medico_familia(Idmedico),utente(Idutente)),S),
                  comprimento(S,N),
                 N==1).
@@ -399,3 +434,6 @@ nao(Questao).
 solucoes(X,Y,Z) :- findall(X,Y,Z).
 
 comprimento(S,N) :- length(S,N).
+
+print([E]) :- write('\t'), write(E), write('\n'). 
+print([H|T]) :- write('\t'), write(H), write('\n'), print(T).
