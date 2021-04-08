@@ -1,5 +1,5 @@
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
-%declarações iniciais
+% Declarações iniciais
 
 :- style_check(-singleton).
 :- style_check(-discontiguous).
@@ -8,12 +8,13 @@
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Definicoes iniciais
 
+:- dynamic (-)/1.
 :- dynamic utente/11.
 :- dynamic centro_saude/5.
 :- dynamic staff/4.
 :- dynamic vacinacao_covid/5.
 :- dynamic medico_familia/4.
-:- dynamic consulta/7.
+:- dynamic consulta/6.
 
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -

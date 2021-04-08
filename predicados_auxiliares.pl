@@ -13,6 +13,30 @@ consulta(Idconsulta) :- consulta(Idconsulta,_,_,_,_,_).
 
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
+% Idade de um utente
+idade(Id,I) :- utente(Id,_,_,Data_Nasc,_,_,_,_,_,_,_), date(DataAtual), date_interval(DataAtual,Data_Nasc, I years).
+
+
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+% Diz se uma lista é vazia
+
+vazia([]).
+
+
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+% Diz se um elemento pertence a uma lista
+
+pertence(X,[X|L]).
+pertence(X,[Y|L]) :- X\=Y, pertence(X,L).
+
+
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
+% Verifica qual a fase em que um utente está incluído
+
+verificaFase(F, Id, Data) :- fase(F, Id, Data), !.
+
+
+%--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Extensão do predicado solucoes: X,Y,Z ->{V,F}
 solucoes(X,Y,Z) :- findall(X,Y,Z).
 

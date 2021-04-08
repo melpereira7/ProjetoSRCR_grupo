@@ -45,6 +45,7 @@ menu:- write('\n'),
        write('24.Listar as pessoas vacinadas\n'), 
        write('25.Listar as pessoas vacinadas indevidamente\n'), 
        write('26.Listar as pessoas candidatas a vacinação\n'), 
+       write('27.Listar as pessoas a quem falta a segunda toma\n'), 
        write('0.Sair \n'),
        write('>> '),
        read(Option),
@@ -76,6 +77,7 @@ executar(Option):-Option=:=1,addUtente,menu;
                   Option=:=24,listagemVacinadas,menu;
                   Option=:=25,listagemVacinadasIndevidamente,menu;
                   Option=:=26,listagemPessoasCandidatas,menu;
+                  Option=:=27,listagemPessoasSemSegundaToma,menu;
                   Option=:=99,true,make,menu;
                   Option=:=0,true,write('Goodbye.'),halt.
 
@@ -236,16 +238,20 @@ listagemStaffPorCentro:-centrosSaude(Centros), print(Centros),
                           ansi_format([bold,fg(cyan)], '~w\n', [Staff]).
 
 listagemPessoasNaoVacinadas:-naoVacinadas(Pessoas),
-                             getNames(Pessoas, R),
+                             getNames(Pessoas,R),
                              ansi_format([bold,fg(cyan)], '~w\n', [R]).
-
-listagemVacinadasIndevidamente :- vacinadas_indevidamente(S),
-                                  getNames(S, R),
-                                  ansi_format([bold,fg(cyan)],'~w\n',[R]).
-
-listagemPessoasCandidatas :- candidatas(S),
-                             getNames(S, R),
-                             ansi_format([bold,fg(cyan)],'~w\n',[R]).
 
 listagemVacinadas :- vacinadas(S),
                      ansi_format([bold,fg(cyan)],'~w\n',[S]).
+
+listagemVacinadasIndevidamente :- vacinadas_indevidamente(S),
+                                  getNames(S,R),
+                                  ansi_format([bold,fg(cyan)],'~w\n',[R]).
+
+listagemPessoasCandidatas :- candidatas(S),
+                             getNames(S,R),
+                             ansi_format([bold,fg(cyan)],'~w\n',[R]).
+
+listagemPessoasSemSegundaToma :- lista_segunda_toma(S),
+                                 getNames(S,R),
+                                 ansi_format([bold,fg(cyan)],'~w\n',[R]).
