@@ -7,6 +7,7 @@
 :- style_check(-singleton).
 :- style_check(-discontiguous).
 :- set_prolog_flag(w:unknown,fail).
+:- set_prolog_flag(encoding,utf8).
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % import de modulos auxiliares
