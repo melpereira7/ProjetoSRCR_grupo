@@ -53,6 +53,8 @@ vacinacao_covid(4,4,date(2021,3,17),'Pfizer',1).
 vacinacao_covid(5,4,date(2021,4,1),'Pfizer',2).
 vacinacao_covid(6,3,date(2021,4,10),'AstraZeneca',2).
 vacinacao_covid(7,6,date(2021,2,5),'AstraZeneca',1).            %vacinada indevidamente
+-vacinacao_covid(8,9,date(2021,2,5),'AstraZeneca',1).
+
 
 
 %medico_familia: #Medico,Nome,Email,#Centro ↝ { 𝕍, 𝔽 }
@@ -68,6 +70,8 @@ medico_familia(9,'Ana Costa Silva','anacostafilomena@hotmail.com',9).
 medico_familia(10,'Luisa Sobral','sobraleurovision@almodovarcs.pt',10).
 medico_familia(11,'Salvador Sentido','semsentid@gmail.com',9).
 medico_familia(12,'Manuel Rodrigues','sarmanu@sapo.pt',8).
+-medico_familia(13,'Manuel Rodrigues','sarmanu@sapo.pt',8).
+
 
 
 %consulta:#Consulta,#Utente,#Medico,Descrição,Custo,Data ↝ { 𝕍, 𝔽 }

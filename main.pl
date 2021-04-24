@@ -34,6 +34,7 @@
 :- consult(evolucao).
 :- consult(predicados_auxiliares).
 :- consult(predicados_extra).
+:- consult(conhecimento_imperfeito).
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Permitir a definição de fases de vacinação, definindo critérios de inclusão de utentes nas diferentes fases (e.g., doenças crónicas, idade, profissão);
