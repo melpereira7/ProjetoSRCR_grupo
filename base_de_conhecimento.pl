@@ -53,8 +53,6 @@ vacinacao_covid(4,4,date(2021,3,17),'Pfizer',1).
 vacinacao_covid(5,4,date(2021,4,1),'Pfizer',2).
 vacinacao_covid(6,3,date(2021,4,10),'AstraZeneca',2).
 vacinacao_covid(7,6,date(2021,2,5),'AstraZeneca',1).            %vacinada indevidamente
--vacinacao_covid(8,9,date(2021,2,5),'AstraZeneca',1).
-
 
 
 %medico_familia: #Medico,Nome,Email,#Centro ↝ { 𝕍, 𝔽 }
@@ -73,7 +71,6 @@ medico_familia(12,'Manuel Rodrigues','sarmanu@sapo.pt',8).
 -medico_familia(13,'Manuel Rodrigues','sarmanu@sapo.pt',8).
 
 
-
 %consulta:#Consulta,#Utente,#Medico,Descrição,Custo,Data ↝ { 𝕍, 𝔽 }
 consulta(1,1,2,'Consulta de rotina',15.00,date(2021,4,21)).
 consulta(2,2,1,'Dores pós vacinação',7.50,date(2021,4,11)).
@@ -85,3 +82,4 @@ consulta(7,7,8,'Consulta de rotina',15.00,date(2021,7,6)).
 consulta(8,8,6,'Verificação exames diabéticos',15.00,date(2021,2,13)).
 consulta(9,9,11,'Consulta de rotina',15.00,date(2021,1,11)).
 consulta(10,9,11,'Marcação de exames rotineiros',5.00,date(2021,5,10)).
+consulta(11,10,11,'Consulta de rotina',5.00,date(2021,5,10)).

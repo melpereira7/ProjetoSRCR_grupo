@@ -69,21 +69,21 @@ vacinada(Id) :- utente(Id), vacinacao_covid(_,Id).
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Extensão do predicado que identifica pessoas vacinadas indevidamente
 
--vacinada_indevidamente(Id) :- nao(vacinada_indevidamente(Id)).
+-vacinada_indevidamente(Id) :- nao(vacinada_indevidamente(Id)), nao(excecao(vacinada_indevidamente(Id))).
 vacinada_indevidamente(Id) :- vacinacao_covid(_,Id,DataVac,_,1), verificaFase(_,Id,DataFase), date_compare(DataFase,>,DataVac).
 
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Extensão do predicado que identifica pessoas não vacinadas e que são candidatas a vacinação
 
--candidata(Id) :- nao(candidata(Id)).
+-candidata(Id) :- nao(candidata(Id)), nao(excecao(candidata(Id))).
 candidata(Id) :- utente(Id), nao(vacinada(Id)), date(DataAtual), verificaFase(_,Id,DataFase), date_compare(DataAtual,>=,DataFase).
 
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 %Extensão do predicado que identifica pessoas a quem falta a segunda toma da vacina
 
--segunda_toma(Id) :- nao(segunda_toma(Id)).
+-segunda_toma(Id) :- nao(segunda_toma(Id)), nao(excecao(segunda_toma(Id))).
 segunda_toma(Id) :- utente(Id), vacinada(Id,1), nao(vacinada(Id,2)).
 
 
