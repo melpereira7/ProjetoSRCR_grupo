@@ -17,6 +17,7 @@ teste([]).
 teste([R|LR]) :- R, teste(LR).
 
 
+
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Extensao do predicado que permite a involucao do conhecimento
 
@@ -24,6 +25,78 @@ involucao(Termo) :- solucoes(Invariante,-Termo::Invariante,Lista), remocao(Termo
 
 remocao(Termo) :- retract(Termo).
 remocao(Termo) :- assert(Termo),!,fail.
+
+
+% EVOLUÇÃO DO CONHECIMENTO INCERTO
+%utente: #Utente, Nº Segurança_Social, Nome, Data_Nasc, Email, Telefone, Morada, Profissão, [Doenças_Crónicas], #CentroSaúde, #MédicoDeFamília ↝ { 𝕍, 𝔽}
+% (1) Utente ------------------------------------------------------------------
+
+evolucaoNameIncerto(utente(ID,NSS,Nome,DataNasc,Email,Telefone,Morada,Profissao,DC,IDcentro,IDmedico)) :-
+        evolucao(utente(ID,NSS,Nome,DataNasc,Email,Telefone,Morada,Profissao,DC,IDcentro,IDmedico)),
+        assert(((excecao(utente(Id,Nss,N,DN,E,T,M,P,DC,Idc,Idm))) :- utente(Id,Nss,Nome,DN,E,T,M,P,DC,Idc,Idm))),
+        assert(uncertainName(Nome)).
+
+
+involucaoNameIncerto(utente(ID,NSS,Nome,DataNasc,Email,Telefone,Morada,Profissao,DC,IDcentro,IDmedico)) :-
+          involucao(utente(ID,NSS,Nome,DataNasc,Email,Telefone,Morada,Profissao,DC,IDcentro,IDmedico)),
+          retract(((excecao((Id,Nss,N,DN,E,T,M,P,DC,Idc,Idm))) :- utente(Id,Nss,Nome,DN,E,T,M,P,DC,Idc,Idm))),
+          retract(uncertainName(Nome)).
+
+
+evolucaoIdadeIncerto(utente(ID,NSS,Nome,DataNasc,Email,Telefone,Morada,Profissao,DC,IDcentro,IDmedico)) :-
+        evolucao(utente(ID,NSS,Nome,DataNasc,Email,Telefone,Morada,Profissao,DC,IDcentro,IDmedico)),
+        assert(((excecao(utente(Id,Nss,N,DN,E,T,M,P,DC,Idc,Idm))) :- utente(Id,Nss,N,DataNasc,E,T,M,P,DC,Idc,Idm))),
+        assert(uncertaintyAge(idade(DataNasc,X))).
+
+involucaoIdadeIncerto(utente(ID,NSS,Nome,DataNasc,Email,Telefone,Morada,Profissao,DC,IDcentro,IDmedico)) :-
+          involucao(utente(ID,NSS,Nome,DataNasc,Email,Telefone,Morada,Profissao,DC,IDcentro,IDmedico)),
+          retract(((excecao(utente(Id,Nss,N,DN,E,T,M,P,DC,Idc,Idm))) :- utente(Id,Nss,N,DataNasc,E,T,M,P,DC,Idc,Idm))),
+          retract(uncertaintyAge(idade(DataNasc,X))).
+
+
+%auxiliar idade //  nao sabia se ao usar o id como temos no outro predicado idade faria diferença depois ao inferir o involucaoIdadeIncerto
+%idade(DataNasc,I) :- date(DataAtual), date_interval(DataAtual,DataNasc, I years).
+
+
+
+evolucaoMoradaIncerto(utente(ID,NSS,Nome,DataNasc,Email,Telefone,Morada,Profissao,DC,IDcentro,IDmedico)) :-
+        evolucao(utente(ID,NSS,Nome,DataNasc,Email,Telefone,Morada,Profissao,DC,IDcentro,IDmedico)),
+        assert(((excecao(utente(Id,Nss,N,DN,E,T,M,P,DC,Idc,Idm))) :- utente(Id,Nss,N,DN,E,T,Morada,P,DC,Idc,Idm))),
+        assert(uncertainMorada(Morada)).
+
+
+involucaoMoradaIncerto(utente(ID,NSS,Nome,DataNasc,Email,Telefone,Morada,Profissao,DC,IDcentro,IDmedico)) :-
+          involucao(utente(ID,NSS,Nome,DataNasc,Email,Telefone,Morada,Profissao,DC,IDcentro,IDmedico)),
+          retract(((excecao(utente(Id,Nss,N,DN,E,T,M,P,DC,Idc,Idm))) :- utente(Id,Nss,N,DN,E,T,Morada,P,DC,Idc,Idm))),
+          retract(uncertaintyMorada(Morada)).
+
+
+% EVOLUÇÃO DO CONHECIMENTO INTERDITO
+% (1) Utente ------------------------------------------------------------------
+   
+   evolucaoAdressInterdito(utente(ID,NSS,Nome,DataNasc,Email,Telefone,Morada,Profissao,DC,IDcentro,IDmedico)) :-(
+    nao(excecao(utente(ID,NSS,Nome,DataNasc,Email,Telefone,Morada,Profissao,DC,IDcentro,IDmedico))),
+    evolucao(utente(ID,NSS,Nome,DataNasc,Email,Telefone,Morada,Profissao,DC,IDcentro,IDmedico)),
+    assert((excecao(utente(Id,Nss,N,DN,E,T,M,P,DC,Idc,Idm)):- utente(Id,Nss,N,DN,E,T,Morada,P,DC,Idc,Idm))),
+    assert(nulo(Morada)),
+    assert(+utente(Identifier,NrSS,Name,Birthdate,E_Mail,Cellphone,Address,Job,Diseases,IdentifierCenter,IdentifierDoc)::(findall((Identifier,NrSS,Name,Birthdate,E_Mail,Cellphone,Morada,Job,Diseases,IdentifierCenter,IdentifierDoc),
+        (utente(IdUt,Nome,Idade,Sexo,C),nao(nulo(C))),L),
+    length(L,0)))).
+
+
+%evolucao conhecimento impreciso
+
+% consulta ????????
+%nao sei este 
+
+
+
+
+
+%atualizar base de conhecimento com casos de conhecimento imperfeito
+
+
+
 
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
