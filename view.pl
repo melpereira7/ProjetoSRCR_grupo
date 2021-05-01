@@ -60,43 +60,43 @@ menu:- write('\n'),
        read(Option),
        executar(Option).
 
-executar(Option):-Option=:=1,addUtente,menu;
-                  Option=:=2,addCentro,menu;
-                  Option=:=3,addStaff,menu;
-                  Option=:=4,addVacinacao,menu;
-                  Option=:=5,addMedico,menu;
-                  Option=:=6,addConsulta,menu;
-                  Option=:=7,deleteUtente,menu;
-                  Option=:=8,deleteCentro,menu;
-                  Option=:=9,deleteStaff,menu;
-                  Option=:=10,deleteVacinacao,menu;
-                  Option=:=11,deleteMedico,menu;
-                  Option=:=12,deleteConsulta,menu;
-                  Option=:=13,consultCustoConsulta,menu;
-                  Option=:=14,consultPessoaVacinada,menu;
-                  Option=:=15,consultPessoaNaoVacinada,menu;
-                  Option=:=16,consultFaseVacinacao,menu;
-                  Option=:=17,consultCandidataVacinacao,menu;
-                  Option=:=18,consultSegundaToma,menu;
-                  Option=:=19,consultVacinadaInfevidamente,menu;
-                  Option=:=20,listagemMedicosPorCentro,menu;
-                  Option=:=21,listagemUtentesPorCentro,menu;
-                  Option=:=22,listagemStaffPorCentro,menu;
-                  Option=:=23,listagemPessoasNaoVacinadas,menu;
-                  Option=:=24,listagemVacinadas,menu;
-                  Option=:=25,listagemVacinadasIndevidamente,menu;
-                  Option=:=26,listagemPessoasCandidatas,menu;
-                  Option=:=27,listagemPessoasSemSegundaToma,menu;
-                  Option=:=28,addUtentedesconhecido,menu;
-                  Option=:=29,addCentrodesconhecido,menu;
-                  Option=:=30,addStaffdesconhecido,menu;
-                  Option=:=31,addVacinacaodesconhecido,menu;
-                  Option=:=32,addMedicodesconhecido,menu;
-                  Option=:=33,addConsultaincerto,menu;
-                  Option=:=34,addConsultaimpreciso,menu;
-                  Option=:=35,addConsultainterdito,menu;
-                  Option=:=99,true,make,menu;
-                  Option=:=0,true,write('Goodbye.\n'),halt.
+executar(1) :- addUtente,menu.
+executar(2) :- addCentro,menu.
+executar(3) :- addStaff,menu.
+executar(4) :- addVacinacao,menu.
+executar(5) :- addMedico,menu.
+executar(6) :- addConsulta,menu.
+executar(7) :- deleteUtente,menu.
+executar(8) :- deleteCentro,menu.
+executar(9) :- deleteStaff,menu.
+executar(10) :- deleteVacinacao,menu.
+executar(11) :- deleteMedico,menu.
+executar(12) :- deleteConsulta,menu.
+executar(13) :- consultCustoConsulta,menu.
+executar(14) :- consultPessoaVacinada,menu.
+executar(15) :- consultPessoaNaoVacinada,menu.
+executar(16) :- consultFaseVacinacao,menu.
+executar(17) :- consultCandidataVacinacao,menu.
+executar(18) :- consultSegundaToma,menu.
+executar(19) :- consultVacinadaInfevidamente,menu.
+executar(20) :- listagemMedicosPorCentro,menu.
+executar(21) :- listagemUtentesPorCentro,menu.
+executar(22) :- listagemStaffPorCentro,menu.
+executar(23) :- listagemPessoasNaoVacinadas,menu.
+executar(24) :- listagemVacinadas,menu.
+executar(25) :- listagemVacinadasIndevidamente,menu.
+executar(26) :- listagemPessoasCandidatas,menu.
+executar(27) :- listagemPessoasSemSegundaToma,menu.
+executar(28) :- addUtentedesconhecido,menu.
+executar(29) :- addCentrodesconhecido,menu.
+executar(30) :- addStaffdesconhecido,menu.
+executar(31) :- addVacinacaodesconhecido,menu.
+executar(32) :- addMedicodesconhecido,menu.
+executar(33) :- addConsultaincerto,menu.
+executar(34) :- addConsultaimpreciso,menu.
+executar(35) :- addConsultainterdito,menu.
+executar(99) :- true,make,menu.
+executar(0) :- true,write('Goodbye.\n'),halt.
 
 
 /* -------------------------------- INSERÇÕES -------------------------------- */
