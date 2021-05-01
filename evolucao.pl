@@ -9,7 +9,22 @@
 % Extensao do predicado que permite a evolucao do conhecimento
 
 evolucao(Termo) :- solucoes(Invariante,+Termo::Invariante,Lista), insercao(Termo), teste(Lista).
+
 evolucao(-Termo) :- solucoes(Invariante,+(-Termo)::Invariante,Lista), insercao(-Termo), teste(Lista).
+
+evolucao_incerto(Termo) :-
+    solucoes(Invariante,+Termo::Invariante,Lista),
+    solucoes(Invariante,+Termo:-:Invariante ListaImperfeito),
+    insercao(Termo),
+    teste(Lista),
+    teste(ListaImperfeito).
+
+evolucao_impreciso(Termo) :-
+  solucoes(Invariante,+Termo::Invariante,Lista),
+  solucoes(Invariante,+Termo:~:Invariante,ListaImpreciso),
+  insercao(excecao(Termo)),
+  teste(Lista),
+  teste(ListaImpreciso).
 
 insercao(Termo) :- assert(Termo).
 insercao(Termo) :- retract(Termo),!,fail.
@@ -24,6 +39,22 @@ teste([R|LR]) :- R, teste(LR).
 
 involucao(Termo) :- solucoes(Invariante,-Termo::Invariante,Lista), remocao(Termo), teste(Lista).
 
+involucao(-Termo) :- solucoes(Invariante,-(-Termo::Invariante,Lista)), remocao(-Termo), teste(Lista).
+
+involucao_incerto(Termo) :-
+    solucoes(Invariante,-Termo::Invariante,Lista),
+    solucoes(Invariante,-Termo:-:Invariante,ListaIncerto),
+    remocao(Termo),
+    teste(Lista),
+    teste(ListaIncerto).
+
+involucao_incerto(Termo) :-
+    solucoes(Invariante,-Termo::Invariante,Lista),
+    solucoes(Invariante,-Termo:~:Invariante,ListaImpreciso),
+    remocao(Termo),
+    teste(Lista),
+    teste(ListaImpreciso).
+
 remocao(Termo) :- retract(Termo).
 remocao(Termo) :- assert(Termo),!,fail.
 
@@ -32,57 +63,54 @@ remocao(Termo) :- assert(Termo),!,fail.
 %utente: #Utente, Nº Segurança_Social, Nome, Data_Nasc, Email, Telefone, Morada, Profissão, [Doenças_Crónicas], #CentroSaúde, #MédicoDeFamília ↝ { 𝕍, 𝔽}
 % (1) Utente ------------------------------------------------------------------
 
-evolucaoNameIncerto(utente(ID,NSS,Nome,DataNasc,Email,Telefone,Morada,Profissao,DC,IDcentro,IDmedico)) :-
-        evolucao(utente(ID,NSS,Nome,DataNasc,Email,Telefone,Morada,Profissao,DC,IDcentro,IDmedico)),
+evolucaoNomeIncerto(utente(ID,NSS,Nome,DataNasc,Email,Telefone,Morada,Profissao,DC,IDcentro,IDmedico)) :-
+        evolucao_incerto(utente(ID,NSS,Nome,DataNasc,Email,Telefone,Morada,Profissao,DC,IDcentro,IDmedico)),
         assert(((excecao(utente(Id,Nss,N,DN,E,T,M,P,DC,Idc,Idm))) :- utente(Id,Nss,Nome,DN,E,T,M,P,DC,Idc,Idm))),
-        assert(uncertainName(Nome)).
+        assert(incerto(utente_nome(ID))).
 
 
-involucaoNameIncerto(utente(ID,NSS,Nome,DataNasc,Email,Telefone,Morada,Profissao,DC,IDcentro,IDmedico)) :-
-          involucao(utente(ID,NSS,Nome,DataNasc,Email,Telefone,Morada,Profissao,DC,IDcentro,IDmedico)),
+involucaoNomeIncerto(utente(ID,NSS,Nome,DataNasc,Email,Telefone,Morada,Profissao,DC,IDcentro,IDmedico)) :-
+          involucao_incerto(utente(ID,NSS,Nome,DataNasc,Email,Telefone,Morada,Profissao,DC,IDcentro,IDmedico)),
           retract(((excecao((Id,Nss,N,DN,E,T,M,P,DC,Idc,Idm))) :- utente(Id,Nss,Nome,DN,E,T,M,P,DC,Idc,Idm))),
-          retract(uncertainName(Nome)).
+          retract(incerto(utente_nome(ID))).
 
 
-evolucaoIdadeIncerto(utente(ID,NSS,Nome,DataNasc,Email,Telefone,Morada,Profissao,DC,IDcentro,IDmedico)) :-
-        evolucao(utente(ID,NSS,Nome,DataNasc,Email,Telefone,Morada,Profissao,DC,IDcentro,IDmedico)),
+evolucaoDataIncerto(utente(ID,NSS,Nome,DataNasc,Email,Telefone,Morada,Profissao,DC,IDcentro,IDmedico)) :-
+        evolucao_incerto(utente(ID,NSS,Nome,DataNasc,Email,Telefone,Morada,Profissao,DC,IDcentro,IDmedico)),
         assert(((excecao(utente(Id,Nss,N,DN,E,T,M,P,DC,Idc,Idm))) :- utente(Id,Nss,N,DataNasc,E,T,M,P,DC,Idc,Idm))),
-        assert(uncertaintyAge(idade(DataNasc,X))).
+        assert(incerto(utente_data(ID))).
 
-involucaoIdadeIncerto(utente(ID,NSS,Nome,DataNasc,Email,Telefone,Morada,Profissao,DC,IDcentro,IDmedico)) :-
-          involucao(utente(ID,NSS,Nome,DataNasc,Email,Telefone,Morada,Profissao,DC,IDcentro,IDmedico)),
+involucaoDataIncerto(utente(ID,NSS,Nome,DataNasc,Email,Telefone,Morada,Profissao,DC,IDcentro,IDmedico)) :-
+          involucao_incerto(utente(ID,NSS,Nome,DataNasc,Email,Telefone,Morada,Profissao,DC,IDcentro,IDmedico)),
           retract(((excecao(utente(Id,Nss,N,DN,E,T,M,P,DC,Idc,Idm))) :- utente(Id,Nss,N,DataNasc,E,T,M,P,DC,Idc,Idm))),
-          retract(uncertaintyAge(idade(DataNasc,X))).
+          retract(incerto(utente_data(ID))).
 
-
-%auxiliar idade //  nao sabia se ao usar o id como temos no outro predicado idade faria diferença depois ao inferir o involucaoIdadeIncerto
-%idade(DataNasc,I) :- date(DataAtual), date_interval(DataAtual,DataNasc, I years).
 
 
 
 evolucaoMoradaIncerto(utente(ID,NSS,Nome,DataNasc,Email,Telefone,Morada,Profissao,DC,IDcentro,IDmedico)) :-
-        evolucao(utente(ID,NSS,Nome,DataNasc,Email,Telefone,Morada,Profissao,DC,IDcentro,IDmedico)),
+        evolucao_incerto(utente(ID,NSS,Nome,DataNasc,Email,Telefone,Morada,Profissao,DC,IDcentro,IDmedico)),
         assert(((excecao(utente(Id,Nss,N,DN,E,T,M,P,DC,Idc,Idm))) :- utente(Id,Nss,N,DN,E,T,Morada,P,DC,Idc,Idm))),
-        assert(uncertainMorada(Morada)).
+        assert(incerto(utente_morada(ID)).
 
 
 involucaoMoradaIncerto(utente(ID,NSS,Nome,DataNasc,Email,Telefone,Morada,Profissao,DC,IDcentro,IDmedico)) :-
-          involucao(utente(ID,NSS,Nome,DataNasc,Email,Telefone,Morada,Profissao,DC,IDcentro,IDmedico)),
+          involucao_incerto(utente(ID,NSS,Nome,DataNasc,Email,Telefone,Morada,Profissao,DC,IDcentro,IDmedico)),
           retract(((excecao(utente(Id,Nss,N,DN,E,T,M,P,DC,Idc,Idm))) :- utente(Id,Nss,N,DN,E,T,Morada,P,DC,Idc,Idm))),
-          retract(uncertaintyMorada(Morada)).
+          retract(incerto(utente_morada(ID)).
 
 
 % EVOLUÇÃO DO CONHECIMENTO INTERDITO
 % (1) Utente ------------------------------------------------------------------
    
-   evolucaoAdressInterdito(utente(ID,NSS,Nome,DataNasc,Email,Telefone,Morada,Profissao,DC,IDcentro,IDmedico)) :-(
+evolucaoMoradaInterdito(utente(ID,NSS,Nome,DataNasc,Email,Telefone,Morada,Profissao,DC,IDcentro,IDmedico)) :-(
     nao(excecao(utente(ID,NSS,Nome,DataNasc,Email,Telefone,Morada,Profissao,DC,IDcentro,IDmedico))),
-    evolucao(utente(ID,NSS,Nome,DataNasc,Email,Telefone,Morada,Profissao,DC,IDcentro,IDmedico)),
+    evolucao_interdito(utente(ID,NSS,Nome,DataNasc,Email,Telefone,Morada,Profissao,DC,IDcentro,IDmedico)),
     assert((excecao(utente(Id,Nss,N,DN,E,T,M,P,DC,Idc,Idm)):- utente(Id,Nss,N,DN,E,T,Morada,P,DC,Idc,Idm))),
     assert(nulo(Morada)),
-    assert(+utente(Identifier,NrSS,Name,Birthdate,E_Mail,Cellphone,Address,Job,Diseases,IdentifierCenter,IdentifierDoc)::(findall((Identifier,NrSS,Name,Birthdate,E_Mail,Cellphone,Morada,Job,Diseases,IdentifierCenter,IdentifierDoc),
-        (utente(IdUt,Nome,Idade,Sexo,C),nao(nulo(C))),L),
-    length(L,0)))).
+    assert(+utente(Id,Nss,N,DN,E,T,M,P,DC,Idc,Idm)::(solucoes((Id,Nss,N,DN,E,T,M,P,DC,Idc,Idm),
+                                                     (utente(IdUt,Nome,Idade,Sexo,C),nao(nulo(C))),S),
+                                                     comprimento(S,0)))).
 
 
 %evolucao conhecimento impreciso
@@ -103,6 +131,16 @@ involucaoMoradaIncerto(utente(ID,NSS,Nome,DataNasc,Email,Telefone,Morada,Profiss
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 %---- Invariantes
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
+
++Termo :: (nao(-Termo)).
+
++(-Termo) :: (nao(Termo)).
+
+
++(excecao(Termo)) :: (solucoes(Termo,excecao(Termo),S),
+                      comprimento(S,N),
+                      N==1).
+
 % Não pode haver mais que um utente com o mesmo identificador
 +utente(Idutente,_,_,_,_,_,_,_,_,_,_) :: 
                 (solucoes(Idutente,utente(Idutente),S),
@@ -209,6 +247,47 @@ involucaoMoradaIncerto(utente(ID,NSS,Nome,DataNasc,Email,Telefone,Morada,Profiss
                 (solucoes(Idutente,utente(Idutente,_,_,_,_,_,_,_,_,_,Idmedico),S),
                 comprimento(S,N),
                 N==0).
+
+
+
++(-utente(Idutente,_,_,_,_,_,_,_,_,_,_)) :: 
+                (solucoes(Idutente,(-utente(Idutente)),S),
+                 comprimento(S,N),
+                 N==1).
+
++(-staff(Idstaff,_,_,_)) :: 
+                (solucoes(Idstaff,(-staff(Idstaff)),S),
+                 comprimento(S,N),
+                 N==2).
+
++(-vacinacao_covid(Idstaff,Idutente,Data,Vacina,Toma)) :: 
+                (solucoes((Idstaff,Idutente),(-vacinacao_covid(Idstaff,Idutente,Data,Vacina,Toma)),S),
+                 comprimento(S,N),
+                 N==2).
+
++(-centro_saude(Idcentro,_,_,_,_)) ::
+                (solucoes(Idcentro,(-centro_saude(Idcentro)),S),
+                comprimento(S,N),
+                N==2).
+
++(-medico_familia(Idmedico,_,_,_)) ::
+                (solucoes(Idmedico,(-medico_familia(Idmedico)),S),
+                 comprimento(S,N),
+                 N==2).
+
++(-consulta(Idconsulta,_,_,_,_,_)) ::
+                (solucoes(Idconsulta,(-consulta(Idconsulta)),S),
+                 comprimento(S,N),
+                 N==2).
+
+
+
+
+
+
+
+
+
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 %---- Registos
