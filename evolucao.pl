@@ -53,7 +53,7 @@ involucaoIncerto(Termo) :-
 involucaoImpreciso(Termo) :-
     solucoes(Invariante,-Termo::Invariante,Lista),
     solucoes(Invariante,-Termo:..:Invariante,ListaImpreciso),
-    remocao(Termo),
+    remocao(excecao(Termo)),
     teste(Lista),
     teste(ListaImpreciso).
 
@@ -121,12 +121,12 @@ involucao_incerto(medico_familia(Idmedico,Nome,Email,Idcentro)) :-
 %consulta
 evolucao_incerto(consulta(Idconsulta,Idutente,Idmedico,Descricao,Custo,Data)) :-
         evolucaoIncerto(consulta(Idconsulta,Idutente,Idmedico,Descricao,Custo,Data)),
-        insercao(((excecao(consulta(Idc,Idu,Idm,D,C,D))) :- consulta(Idc,Idu,Idm,D,C,D))),
+        insercao(((excecao(consulta(Idc,Idu,Idm,Desc,C,D))) :- consulta(Idc,Idu,Idm,Descricao,C,D))),
         insercao(incerto(staff(Idconsulta))).
 
 involucao_incerto(consulta(Idconsulta,Idutente,Idmedico,Descricao,Custo,Data)) :-
         involucaoIncerto(consulta(Idconsulta,Idutente,Idmedico,Descricao,Custo,Data)),
-        remocao(((excecao(consulta(Idc,Idu,Idm,D,C,D))) :- consulta(Idc,Idu,Idm,D,C,D))),
+        remocao(((excecao(consulta(Idc,Idu,Idm,Desc,C,D))) :- consulta(Idc,Idu,Idm,Descricao,C,D))),
         remocao(incerto(staff(Idconsulta))).
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
@@ -151,7 +151,7 @@ evolucao_impreciso(consulta(Idconsulta,Idutente,Idmedico,Descricao,Custo,Data)) 
 
 involucao_impreciso(consulta(Idconsulta,Idutente,Idmedico,Descricao,Custo,Data)) :-
         remocao(impreciso(consulta(Idconsulta))),
-        involucaoImpreciso(consulta(Idconsulta,Idutente,Idmedico,Descricao,Custo,Data)).
+        remocao(excecao(consulta(Idconsulta,Idutente,Idmedico,Descricao,Custo,Data))).
 
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
@@ -469,126 +469,149 @@ registarConsultaImpreciso(IdConsulta,IdUtente,IdMedico,Descricao,Custo,Data):-
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % utente
 removerUtente(Idutente) :-
+    perfeito(utente(Idutente)),
     utente(Idutente,NISS,Nome,Data_Nasc,Email,Telefone,Morada,Profissao,DoencasCronicas,Idcentro,Idmedico),
     involucao(utente(Idutente,NISS,Nome,Data_Nasc,Email,Telefone,Morada,Profissao,DoencasCronicas,Idcentro,Idmedico)).
 
 % centro_saude
 removerCentro(Idcentro) :-
+    perfeito(centro_saude(IdUtente)),
     centro_saude(Idcentro,Nome,Morada,Telefone,Email),
     involucao(centro_saude(Idcentro,Nome,Morada,Telefone,Email)).
 
 % staff
 removerStaff(Idstaff) :-
+    perfeito(staff(Idstaff)),
     staff(Idstaff,Idcentro,Nome,Email),
     involucao(staff(Idstaff,Idcentro,Nome,Email)).
 
 % vacinacao_covid
 removerVacinacao(Idstaff,Idutente,Data,Vacina,Toma) :-
+    perfeito(vacinacao_covid(Idstaff,Idutente,Data,Vacina,Toma)),
     involucao(vacinacao_covid(Idstaff,Idutente,Data,Vacina,Toma)).
 
 % medico_familia
 removerMedico(Idmedico) :-
+    perfeito(IdMedico),
     medico_familia(Idmedico,Nome,Email,IdCentro),
     involucao(medico_familia(Idmedico,Nome,Email,IdCentro)).
 
 % consulta
 removerConsulta(Idconsulta) :-
+    perfeito(IdConsulta),
     consulta(Idconsulta,Idutente,Idmedico,Descricao,Custo,Data),
     involucao(consulta(Idconsulta,Idutente,Idmedico,Descricao,Custo,Data)).
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Remoções incerto
 % utente
-removerUtenteIncerto(Idutente,NISS,Nome,Data_Nasc,Email,Telefone,Morada,Profissao,DoencasCronicas,Idcentro,Idmedico) :-
+removerUtente(Idutente) :-
     incerto(utente(Idutente)),
+    utente(Idutente,NISS,Nome,Data_Nasc,Email,Telefone,Morada,Profissao,DoencasCronicas,Idcentro,Idmedico),
     involucao_incerto(utente(Idutente,NISS,Nome,Data_Nasc,Email,Telefone,Morada,Profissao,DoencasCronicas,Idcentro,Idmedico)).
 
 % centro_saude
-removerCentroIncerto(Idcentro,Nome,Morada,Telefone,Email) :-
-    incerto(centro_saude(Idcentro)),
+removerCentro(Idcentro) :-
+    incerto(centro_saude(IdUtente)),
+    centro_saude(Idcentro,Nome,Morada,Telefone,Email),
     involucao_incerto(centro_saude(Idcentro,Nome,Morada,Telefone,Email)).
 
 % staff
-removerStaffIncerto(Idstaff,Idcentro,Nome,Email) :-
+removerStaff(Idstaff) :-
     incerto(staff(Idstaff)),
+    staff(Idstaff,Idcentro,Nome,Email),
     involucao_incerto(staff(Idstaff,Idcentro,Nome,Email)).
 
 % vacinacao_covid
-removerVacinacaoIncerto(Idstaff,Idutente,Data,Vacina,Toma) :-
+removerVacinacao(Idstaff,Idutente,Data,Vacina,Toma) :-
     incerto(vacinacao_covid(Idstaff,Idutente,Data,Vacina,Toma)),
     involucao_incerto(vacinacao_covid(Idstaff,Idutente,Data,Vacina,Toma)).
 
 % medico_familia
-removerMedicoIncerto(Idmedico,Nome,Email,IdCentro) :-
-    incerto(medico_familia(Idmedico,Nome,Email,IdCentro)),
+removerMedico(Idmedico) :-
+    incerto(IdMedico),
+    medico_familia(Idmedico,Nome,Email,IdCentro),
     involucao_incerto(medico_familia(Idmedico,Nome,Email,IdCentro)).
 
 % consulta
-removerConsultaIncerto(Idconsulta,Idutente,Idmedico,Descricao,Custo,Data) :-
-    incerto(consulta(Idconsulta,Idutente,Idmedico,Descricao,Custo,Data)),
+removerConsulta(Idconsulta) :-
+    incerto(IdConsulta),
+    consulta(Idconsulta,Idutente,Idmedico,Descricao,Custo,Data),
     involucao_incerto(consulta(Idconsulta,Idutente,Idmedico,Descricao,Custo,Data)).
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Remoções interdito
 % utente
-removerUtenteInterdito(Idutente,NISS,Nome,Data_Nasc,Email,Telefone,Morada,Profissao,DoencasCronicas,Idcentro,Idmedico) :-
+% utente
+removerUtente(Idutente) :-
     interdito(utente(Idutente)),
+    utente(Idutente,NISS,Nome,Data_Nasc,Email,Telefone,Morada,Profissao,DoencasCronicas,Idcentro,Idmedico),
     involucao_interdito(utente(Idutente,NISS,Nome,Data_Nasc,Email,Telefone,Morada,Profissao,DoencasCronicas,Idcentro,Idmedico)).
 
 % centro_saude
-removerCentroIncerto(Idcentro,Nome,Morada,Telefone,Email) :-
-    interdito(centro_saude(Idcentro)),
+removerCentro(Idcentro) :-
+    interdito(centro_saude(IdUtente)),
+    centro_saude(Idcentro,Nome,Morada,Telefone,Email),
     involucao_interdito(centro_saude(Idcentro,Nome,Morada,Telefone,Email)).
 
 % staff
-removerStaffIncerto(Idstaff,Idcentro,Nome,Email) :-
+removerStaff(Idstaff) :-
     interdito(staff(Idstaff)),
+    staff(Idstaff,Idcentro,Nome,Email),
     involucao_interdito(staff(Idstaff,Idcentro,Nome,Email)).
 
 % vacinacao_covid
-removerVacinacaoIncerto(Idstaff,Idutente,Data,Vacina,Toma) :-
+removerVacinacao(Idstaff,Idutente,Data,Vacina,Toma) :-
     interdito(vacinacao_covid(Idstaff,Idutente,Data,Vacina,Toma)),
     involucao_interdito(vacinacao_covid(Idstaff,Idutente,Data,Vacina,Toma)).
 
 % medico_familia
-removerMedicoIncerto(Idmedico,Nome,Email,IdCentro) :-
-    interdito(medico_familia(Idmedico,Nome,Email,IdCentro)),
+removerMedico(Idmedico) :-
+    interdito(IdMedico),
+    medico_familia(Idmedico,Nome,Email,IdCentro),
     involucao_interdito(medico_familia(Idmedico,Nome,Email,IdCentro)).
 
 % consulta
-removerConsultaIncerto(Idconsulta,Idutente,Idmedico,Descricao,Custo,Data) :-
-    interdito(consulta(Idconsulta,Idutente,Idmedico,Descricao,Custo,Data)),
+removerConsulta(Idconsulta) :-
+    interdito(IdConsulta),
+    consulta(Idconsulta,Idutente,Idmedico,Descricao,Custo,Data),
     involucao_interdito(consulta(Idconsulta,Idutente,Idmedico,Descricao,Custo,Data)).
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Remoções impreciso
 % utente
-removerUtenteInterdito(Idutente,NISS,Nome,Data_Nasc,Email,Telefone,Morada,Profissao,DoencasCronicas,Idcentro,Idmedico) :-
+% utente
+removerUtente(Idutente) :-
     impreciso(utente(Idutente)),
-    involucao_impreciso(utente(Idutente,NISS,Nome,Data_Nasc,Email,Telefone,Morada,Profissao,DoencasCronicas,Idcentro,Idmedico)).
+    utente(Idutente,NISS,Nome,Data_Nasc,Email,Telefone,Morada,Profissao,DoencasCronicas,Idcentro,Idmedico),
+    involucao_interdito(utente(Idutente,NISS,Nome,Data_Nasc,Email,Telefone,Morada,Profissao,DoencasCronicas,Idcentro,Idmedico)).
 
 % centro_saude
-removerCentroIncerto(Idcentro,Nome,Morada,Telefone,Email) :-
-    impreciso(centro_saude(Idcentro)),
-    involucao_impreciso(centro_saude(Idcentro,Nome,Morada,Telefone,Email)).
+removerCentro(Idcentro) :-
+    impreciso(centro_saude(IdUtente)),
+    centro_saude(Idcentro,Nome,Morada,Telefone,Email),
+    involucao_interdito(centro_saude(Idcentro,Nome,Morada,Telefone,Email)).
 
 % staff
-removerStaffIncerto(Idstaff,Idcentro,Nome,Email) :-
+removerStaff(Idstaff) :-
     impreciso(staff(Idstaff)),
-    involucao_impreciso(staff(Idstaff,Idcentro,Nome,Email)).
+    staff(Idstaff,Idcentro,Nome,Email),
+    involucao_interdito(staff(Idstaff,Idcentro,Nome,Email)).
 
 % vacinacao_covid
-removerVacinacaoIncerto(Idstaff,Idutente,Data,Vacina,Toma) :-
+removerVacinacao(Idstaff,Idutente,Data,Vacina,Toma) :-
     impreciso(vacinacao_covid(Idstaff,Idutente,Data,Vacina,Toma)),
-    involucao_impreciso(vacinacao_covid(Idstaff,Idutente,Data,Vacina,Toma)).
+    involucao_interdito(vacinacao_covid(Idstaff,Idutente,Data,Vacina,Toma)).
 
 % medico_familia
-removerMedicoIncerto(Idmedico,Nome,Email,IdCentro) :-
-    impreciso(medico_familia(Idmedico,Nome,Email,IdCentro)),
-    involucao_impreciso(medico_familia(Idmedico,Nome,Email,IdCentro)).
+removerMedico(Idmedico) :-
+    impreciso(IdMedico),
+    medico_familia(Idmedico,Nome,Email,IdCentro),
+    involucao_interdito(medico_familia(Idmedico,Nome,Email,IdCentro)).
 
 % consulta
-removerConsultaIncerto(Idconsulta,Idutente,Idmedico,Descricao,Custo,Data) :-
-    impreciso(consulta(Idconsulta,Idutente,Idmedico,Descricao,Custo,Data)),
-    involucao_impreciso(consulta(Idconsulta,Idutente,Idmedico,Descricao,Custo,Data)).
+removerConsulta(Idconsulta) :-
+    impreciso(IdConsulta),
+    consulta(Idconsulta,Idutente,Idmedico,Descricao,Custo,Data),
+    involucao_interdito(consulta(Idconsulta,Idutente,Idmedico,Descricao,Custo,Data)).
 
