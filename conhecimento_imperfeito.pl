@@ -58,4 +58,3 @@ excecao(consulta(12,7,13,'Consulta de rotina',5.00,date(2021,04,25))).
 excecao(consulta(12,7,13,'Marcação de exames rotineiros',15.00,date(2021,04,25))).
 excecao(consulta(12,7,13,'Marcação de exames rotineiros',5.00,date(2021,04,25))).
 impreciso(consulta(12)).
-

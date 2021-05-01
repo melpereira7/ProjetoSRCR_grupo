@@ -65,7 +65,7 @@ remocao(Termo) :- assert(Termo),!,fail.
 % Evolução do conhecimento incerto
 %utente - nome desconhecido
 evolucao_incerto(utente(Idutente,NSS,NomeDesconhecido,DataNasc,Email,Telefone,Morada,Profissao,DC,IDcentro,IDmedico)) :-
-        evolucaoIncerto(utente(IIdutenteD,NSS,NomeDesconhecido,DataNasc,Email,Telefone,Morada,Profissao,DC,IDcentro,IDmedico)),
+        evolucaoIncerto(utente(Idutente,NSS,NomeDesconhecido,DataNasc,Email,Telefone,Morada,Profissao,DC,IDcentro,IDmedico)),
         insercao(((excecao(utente(Id,Nss,N,DN,E,T,M,P,D,Idc,Idm))) :- utente(Id,Nss,NomeDesconhecido,DN,E,T,M,P,D,Idc,Idm))),
         insercao(incerto(utente(Idutente),NomeDesconhecido)).
 
@@ -133,14 +133,23 @@ involucao_incerto(consulta(Idconsulta,Idutente,Idmedico,DescricaoDesconhecida,Cu
 % Evolução do conhecimento interdito
 %consulta
 evolucao_interdito(consulta(Idconsulta,Idutente,Idmedico,DescricaoInterdita,Custo,Data)) :-
-    (nao(excecao(consulta(Idconsulta,Idutente,Idmedico,DescricaoInterdita,Custo,Data))),
      evolucaoIncerto(consulta(Idconsulta,Idutente,Idmedico,DescricaoInterdita,Custo,Data)),
      insercao((excecao(consulta(Idc,Idu,Idm,Desc,C,D)):- consulta(Idc,Idu,Idm,DescricaoInterdita,C,D))),
      insercao(nulo(DescricaoInterdita)),
      insercao(interdito(consulta(Idutente))),
      insercao(+consulta(_,_,_,_,_,_) :: (solucoes(D,
                                          (consulta(Idconsulta,Idutente,Idmedico,D,Custo,Data),nao(nulo(D))),S),
-                                         comprimento(S,0)))).
+                                         comprimento(S,0))).
+
+involucao_interdito(consulta(Idconsulta,Idutente,Idmedico,DescricaoInterdita,Custo,Data)) :- 
+    involucaoIncerto(consulta(Idconsulta,Idutente,Idmedico,DescricaoInterdita,Custo,Data)),
+    remocao((excecao(consulta(Idc,Idu,Idm,Desc,C,D)):- consulta(Idc,Idu,Idm,DescricaoInterdita,C,D))),
+    remocao(nulo(DescricaoInterdita)),
+    remocao(interdito(consulta(Idutente))),
+    remocao(+consulta(_,_,_,_,_,_) :: (solucoes(D,(consulta(Idconsulta,Idutente,Idmedico,D,Custo,Data),nao(nulo(D))),S),
+                                       comprimento(S,0))).
+
+
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Evolução do conhecimento impreciso
@@ -316,27 +325,27 @@ involucao_impreciso(consulta(Idconsulta,Idutente,Idmedico,DescricaoImprecisa,Cus
         nao(interdito(utente(Idutente)))).
 
 +centro_saude(Idcentro,_,_,_,_) :.:
-        (nao(incerto(centro_saude(Idcentro)),Incerteza),
+        (nao(incerto(centro_saude(Idcentro),Incerteza)),
         nao(impreciso(centro_saude(Idcentro))),
         nao(interdito(centro_saude(Idcentro)))).
 
 +staff(Idstaff,_,_,_) :.:
-        (nao(incerto(staff(Idstaff)),Incerteza),
+        (nao(incerto(staff(Idstaff),Incerteza)),
         nao(impreciso(staff(Idstaff))),
         nao(interdito(staff(Idstaff)))).
 
 +vacinacao_covid(Idstaff,Idutente,_,_,_) :.:
-        (nao(incerto(vacinacao_covid(Idstaff,Idutente)),Incerteza),
+        (nao(incerto(vacinacao_covid(Idstaff,Idutente),Incerteza)),
         nao(impreciso(vacinacao_covid(Idstaff,Idutente))),
         nao(interdito(vacinacao_covid(Idstaff,Idutente)))).
 
 +medico_familia(Idmedico,_,_,_) :.:
-        (nao(incerto(medico_familia(Idmedico)),Incerteza),
+        (nao(incerto(medico_familia(Idmedico),Incerteza)),
         nao(impreciso(medico_familia(Idmedico))),
         nao(interdito(medico_familia(Idmedico)))).
 
 +consulta(Idconsulta,_,_,_,_,_) :.:
-        (nao(incerto(consulta(Idconsulta)),Incerteza),
+        (nao(incerto(consulta(Idconsulta),Incerteza)),
         nao(impreciso(consulta(Idconsulta))),
         nao(interdito(consulta(Idconsulta)))).
 

@@ -25,10 +25,13 @@
 :- dynamic vacinacao_covid/5.
 :- dynamic medico_familia/4.
 :- dynamic consulta/6.
+:- dynamic perfeito/1.
 :- dynamic incerto/2.
 :- dynamic interdito/1.
 :- dynamic impreciso/1.
 :- dynamic excecao/1.
+:- dynamic nulo/1.
+:- dynamic (::)/2.
 
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
