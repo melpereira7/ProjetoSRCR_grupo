@@ -1,4 +1,4 @@
-% 'não forte' para os predicados das fontes de conhecimento
+% 'não por falha na prova' para os predicados das fontes de conhecimento
 -utente(Idutente,NISS,Nome,Data_Nasc,Email,Telefone,Morada,Profissão,[Doencas_Cronicas],Idcentro,Idmedico) :- 
     nao(utente(Idutente,NISS,Nome,Data_Nasc,Email,Telefone,Morada,Profissão,[Doencas_Cronicas],Idcentro,Idmedico)), 
     nao(excecao(utente(Idutente,NISS,Nome,Data_Nasc,Email,Telefone,Morada,Profissão,[Doencas_Cronicas],Idcentro,Idmedico))).
@@ -33,15 +33,15 @@
 -consulta(Idconsulta) :- -consulta(Idconsulta,_,_,_,_,_).
 
 
-
 % Representação de conhecimento negativo
 -vacinacao_covid(8,9,date(2021,2,5),'AstraZeneca',1).
 -medico_familia(13,'Manuel Rodrigues','sarmanu@sapo.pt',8).
 
+
 % Conhecimento incerto
 vacinacao_covid(1,7,date(x001),'Astrazeneca',1).
 excecao(vacinacao_covid(Staff,Utente,Data,Vacina,Toma)) :- vacinacao_covid(Staff,Utente,date(x001),Vacina,Toma).
-inerto(vacinacao_covid(1,7,date(x001),'Astrazeneca',1)).
+incerto(vacinacao_covid(1,7,date(x001),'Astrazeneca',1)).
 
 % Conhecimento interdito
 medico_familia(14,'Luísa Maria',x002,8).
