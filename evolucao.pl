@@ -9,6 +9,7 @@
 % Extensao do predicado que permite a evolucao do conhecimento
 
 evolucao(Termo) :- solucoes(Invariante,+Termo::Invariante,Lista), insercao(Termo), teste(Lista).
+evolucao(-Termo) :- solucoes(Invariante,+(-Termo)::Invariante,Lista), insercao(-Termo), teste(Lista).
 
 insercao(Termo) :- assert(Termo).
 insercao(Termo) :- retract(Termo),!,fail.

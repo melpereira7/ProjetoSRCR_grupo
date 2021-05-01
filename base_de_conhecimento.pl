@@ -68,7 +68,6 @@ medico_familia(9,'Ana Costa Silva','anacostafilomena@hotmail.com',9).
 medico_familia(10,'Luisa Sobral','sobraleurovision@almodovarcs.pt',10).
 medico_familia(11,'Salvador Sentido','semsentid@gmail.com',9).
 medico_familia(12,'Manuel Rodrigues','sarmanu@sapo.pt',8).
--medico_familia(13,'Manuel Rodrigues','sarmanu@sapo.pt',8).
 
 
 %consulta:#Consulta,#Utente,#Medico,Descrição,Custo,Data ↝ { 𝕍, 𝔽 }
