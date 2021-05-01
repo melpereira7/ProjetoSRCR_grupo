@@ -41,7 +41,7 @@
 % Conhecimento incerto
 vacinacao_covid(1,7,date(x001),'Astrazeneca',1).
 excecao(vacinacao_covid(Staff,Utente,Data,Vacina,Toma)) :- vacinacao_covid(Staff,Utente,date(x001),Vacina,Toma).
-incerto(vacinacao_covid(1,7,date(x001),'Astrazeneca',1)).
+incerto(vacinacao_covid(1,7,date(x001),'Astrazeneca',1),date(x001)).
 
 % Conhecimento interdito
 medico_familia(14,'Luísa Maria',x002,8).
