@@ -95,8 +95,9 @@ executar(32) :- addMedicodesconhecido,menu.
 executar(33) :- addConsultaincerto,menu.
 executar(34) :- addConsultaimpreciso,menu.
 executar(35) :- addConsultainterdito,menu.
-executar(99) :- true,make,menu.
-executar(0) :- true,write('Goodbye.\n'),halt.
+executar(99) :- make,menu.
+executar(0) :- write('Goodbye.\n'),halt.
+executar(X).
 
 
 /* -------------------------------- INSERÇÕES -------------------------------- */
@@ -114,8 +115,8 @@ addUtente :- write('Id Utente: '),read(Idutente), (utente(Idutente),
              write('Lista de doenças crónicas (no formato [doença1,doença2,...] ou [] se nenhuma): '),read(DoencasCronicas),
              write('Id Centro de Saúde: '),read(Idcentro),
              write('Id Médico de Família: '),read(Idmedico),
-             registarUtente(Idutente,NISS,Nome,Data_Nasc,Email,Telefone,Morada,Profissao,DoencasCronicas,Idcentro,Idmedico),
-             ansi_format([bold,fg(green)], 'Sucesso! ~w', ['\n'])). 
+             registarUtente(Idutente,NISS,Nome,Data_Nasc,Email,Telefone,Morada,Profissao,DoencasCronicas,Idcentro,Idmedico)).
+             %ansi_format([bold,fg(green)], 'Sucesso! ~w', ['\n'])). 
 
 addCentro :- write('Id Centro de Saúde: '), read(Idcentro), (centro_saude(Idcentro),
              write('\nId do Centro de Saúde já existente!\nTente novamente.\n');
