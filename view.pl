@@ -142,7 +142,6 @@ addVacinacao :- write('Id Staff: '),read(Idstaff),
                 write('Data (no formato date(Ano,Mes,Dia)): '),read(Data),
                 write('Vacina (entre plicas): '),read(Vacina),
                 write('Toma: '),read(Toma),
-                registarVacinacao(Idstaff,Idutente,Data,Vacina,Toma),
                 ansi_format([bold,fg(green)], 'Sucesso! ~w', ['\n']).
 
 addMedico :- write('Id Médico: '), read(Idmedico), (medico_familia(Idmedico),
@@ -155,7 +154,7 @@ addMedico :- write('Id Médico: '), read(Idmedico), (medico_familia(Idmedico),
              ansi_format([bold,fg(green)], 'Sucesso! ~w', ['\n'])).
 
 addConsulta :- write('Id Consulta: '), read(Idconsulta), (consulta(Idconsulta),
-               write('\nId de médico já existente!\nTente novamente.\n');
+               write('\nId de consulta já existente!\nTente novamente.\n');
                nao(consulta(Idconsulta)),
                write('Id Utente: '),read(Idutente),
                write('Id Médico: '),read(Idmedico),

@@ -191,7 +191,7 @@ involucao_impreciso(consulta(Idconsulta,Idutente,Idmedico,DescricaoImprecisa,Cus
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
 % Não pode haver um utente com um médico de família que não seja do seu centro de saúde
-+utente(_,_,_,_,_,_,_,_,_,Idcentro,Idmedico) :: 
++utente(_,_,_,_,_,_,_,_,_,IdCentro,Idmedico) :: 
                 medico_familia(Idmedico,_,_,IdCentro).
 
 %--------------------------------- - - - - - - - - - -  -  -  -  -   -
