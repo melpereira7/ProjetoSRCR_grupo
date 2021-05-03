@@ -327,7 +327,7 @@ addMedicodesconhecido :- write('Id Médico: '), read(Idmedico), (medico_familia(
                          ansi_format([bold,fg(green)], 'Sucesso! ~w', ['\n'])).
 
 addConsultaincerto :- write('Id Consulta: '), read(Idconsulta), (consulta(Idconsulta),
-                       write('\nId de médico já existente!\nTente novamente.\n');
+                       write('\nId de consulta já existente!\nTente novamente.\n');
                        nao(consulta(Idconsulta)),
                        write('Id Utente: '),read(Idutente),
                        write('Id Médico: '),read(Idmedico),
@@ -338,7 +338,7 @@ addConsultaincerto :- write('Id Consulta: '), read(Idconsulta), (consulta(Idcons
                        ansi_format([bold,fg(green)], 'Sucesso! ~w', ['\n'])).
 
 addConsultaimpreciso :- write('Id Consulta: '), read(Idconsulta), (consulta(Idconsulta),
-                         write('\nId de médico já existente!\nTente novamente.\n');
+                         write('\nId de consulta já existente!\nTente novamente.\n');
                          nao(consulta(Idconsulta)),
                          write('Id Utente: '),read(Idutente),
                          write('Id Médico: '),read(Idmedico),
@@ -349,7 +349,7 @@ addConsultaimpreciso :- write('Id Consulta: '), read(Idconsulta), (consulta(Idco
                          ansi_format([bold,fg(green)], 'Sucesso! ~w', ['\n'])).
 
 addConsultainterdito :- write('Id Consulta: '), read(Idconsulta), (consulta(Idconsulta),
-                         write('\nId de médico já existente!\nTente novamente.\n');
+                         write('\nId de consulta já existente!\nTente novamente.\n');
                          nao(consulta(Idconsulta)),
                          write('Id Utente: '),read(Idutente),
                          write('Id Médico: '),read(Idmedico),
